@@ -1,0 +1,34 @@
+[
+	{
+		"type": "grass",
+		"image": "grass.png"
+	},
+	{
+		"type": "dirt",
+		"image": "dirt.png"
+	},
+	{
+		"type": "checkpoint",
+		"image": "checkpoint.png"
+	},
+	{
+		"type": "tutorial_wall",
+		"image": "tutorial_wall.png"
+	},
+	{
+		"type": "tutorial_wall_side",
+		"image": "tutorial_wall_side.png"
+	},
+	{
+		"type": "finale",
+		"image": "finale.png"
+	},
+	{
+		"type": "trigger",
+		"image": "trigger.png"
+	},
+	{
+		"type": "door",
+		"image": "door.png"
+	}
+]
