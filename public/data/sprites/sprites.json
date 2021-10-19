@@ -2,5 +2,13 @@
 	{
 		"name": "thing",
 		"image": "thing.png"
+	},
+	{
+		"name": "pistol_right",
+		"image": "pistol_right.png"
+	},
+	{
+		"name": "pistol_left",
+		"image": "pistol_left.png"
 	}
 ]

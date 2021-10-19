@@ -39,9 +39,7 @@
 		});
 	};
 
-	onMount(() => {
-		$settings.inAct = false;
-	});
+	onMount(() => {});
 
 	onDestroy(() => {
 		console.log('destroyed');

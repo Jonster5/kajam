@@ -1,8 +1,10 @@
 import type { Rectangle } from '@api/material';
 import type { Sprite } from '@api/sprite';
 import type { Vec2 } from '@api/vec2';
+import type { Player } from '@classes/player';
 import type { ParsedActItem, ParsedAssets } from '@data/assetTypes';
 import type { Block } from '@data/types';
+import type { Writable } from 'svelte/store';
 
 export interface GameMapObject {
 	assets: ParsedAssets;
@@ -21,6 +23,7 @@ export interface GameMapObject {
 	setupMap(stage: Sprite): void;
 
 	update(stage: Sprite): void;
+	checkCollisions(player: Player, text: Writable<string>): void;
 
 	getSpawnCoords(): Block;
 }

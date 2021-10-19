@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { settings } from '@api/settings';
+
 	import type { ParsedAssets, ParsedAudioItem } from '@data/assetTypes';
 
 	import { createEventDispatcher, onDestroy, onMount } from 'svelte';
@@ -22,6 +24,7 @@
 	onMount(() => {
 		bg.loop = true;
 		if (!bg.playing) bg.restart();
+		$settings.inAct = false;
 	});
 </script>
 
@@ -29,7 +32,7 @@
 	in:fly={{ easing: cubicOut, delay: 500, duration: 500, y: -300 }}
 	out:fly={{ easing: cubicIn, delay: 50, duration: 450, y: -300 }}
 >
-	<div class="title">$ Money Maze $</div>
+	<div class="title">Labyrinth</div>
 
 	<div>
 		<div class="button" on:click={() => click('play')}>Start</div>

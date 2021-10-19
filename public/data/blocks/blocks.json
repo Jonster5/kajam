@@ -30,5 +30,9 @@
 	{
 		"type": "door",
 		"image": "door.png"
+	},
+	{
+		"type": "spawn",
+		"image": "spawn.png"
 	}
 ]

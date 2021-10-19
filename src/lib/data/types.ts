@@ -1,4 +1,4 @@
-import type { Texture } from '@api/material';
+import type { Rectangle, Texture } from '@api/material';
 import type { Sprite } from '@api/sprite';
 import type { Vec2 } from '@api/vec2';
 
@@ -18,6 +18,15 @@ export interface Block {
 	y: number;
 	solid: boolean;
 	sprite: Sprite<Texture>;
+	data?: {
+		[key: string]: any;
+	};
+}
+
+export interface Bullet {
+	sprite: Sprite<Rectangle>;
+	damage: number;
+	target: Vec2;
 }
 
 export type CollisionType = 'top' | 'bottom' | 'right' | 'left' | 'any' | '';

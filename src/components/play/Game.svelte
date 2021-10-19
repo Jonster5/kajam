@@ -10,12 +10,15 @@
 	import { settings } from '@api/settings';
 	import { fly } from 'svelte/transition';
 	import { cubicIn, cubicOut } from 'svelte/easing';
+	import type { Writable } from 'svelte/store';
 
 	export let assets: ParsedAssets;
 	export let act: ParsedActItem;
 
 	const Game = ActnGame[`Act${act.order + 1}Game`]!;
-	let game;
+	let game: any;
+
+	let ctext: Writable<string>;
 
 	let target: HTMLElement;
 
@@ -25,6 +28,8 @@
 
 		game = new Game(target, assets, act);
 		game.spawnPlayer(assets.characters[0]);
+
+		ctext = game.showText;
 	});
 
 	onDestroy(() => {
@@ -38,6 +43,10 @@
 	bind:this={target}
 />
 
+{#if $ctext}
+	<article>{@html $ctext}</article>
+{/if}
+
 <style lang="scss">
 	main {
 		position: absolute;
@@ -45,5 +54,25 @@
 		height: 100%;
 		top: 0;
 		left: 0;
+	}
+
+	article {
+		position: absolute;
+		top: 5vh;
+		left: 50vw;
+		width: 50%;
+
+		transform: translate(-50%, 0);
+		padding: 1vh;
+		box-sizing: border-box;
+
+		background: #000000aa;
+		border-radius: 2vh;
+
+		font-family: trispace;
+		font-size: 2.3vh;
+		line-height: 3vh;
+		text-align: center;
+		box-shadow: 0 0 1.1vh #ffffff70;
 	}
 </style>

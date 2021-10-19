@@ -6,6 +6,7 @@ import type { Player } from '@classes/player';
 import type { ParsedActItem, ParsedAssets } from '@data/assetTypes';
 import type { Block, Settings } from '@data/types';
 import type { GameMapObject } from '@utils/mapUtils';
+import type { Writable } from 'svelte/store';
 
 export class GameMap implements GameMapObject {
 	assets: ParsedAssets;
@@ -19,6 +20,9 @@ export class GameMap implements GameMapObject {
 	blocks: Block[];
 	collidable: Block[];
 	checkpoints: Block[];
+	triggers: Block[];
+	doors: Block[];
+	finale: Block;
 
 	constructor(assets: ParsedAssets, act: ParsedActItem, stage: Sprite<Stage>) {
 		this.assets = assets;
@@ -50,7 +54,7 @@ export class GameMap implements GameMapObject {
 
 	setupMap(stage: Sprite) {
 		this.act.grid.forEach((g) => {
-			const { type, x, y, solid } = g;
+			const { type, x, y, solid, data } = g;
 
 			try {
 				const img = this.assets.blocks.find((b) => b.type === type).image;
@@ -67,6 +71,7 @@ export class GameMap implements GameMapObject {
 					y,
 					solid,
 					sprite,
+					data,
 				};
 
 				this.blocks.push(block);
@@ -83,7 +88,7 @@ export class GameMap implements GameMapObject {
 
 	update(stage: Sprite) {}
 
-	checkCollisions(player: Player) {
+	checkCollisions(player: Player, text: Writable<string>) {
 		for (let c of this.collidable) {
 			if (Math.abs(player.position.x - c.x * 100) > 200) continue;
 			if (Math.abs(player.position.y - c.y * 100) > 200) continue;
@@ -104,6 +109,39 @@ export class GameMap implements GameMapObject {
 				true,
 				false
 			);
+		}
+
+		let col = false;
+
+		for (let c of this.checkpoints) {
+			const collision = rectangleCollision(
+				{
+					position: player.position,
+					tpos: player.position.clone().subtract(player.sprite.halfSize),
+					halfSize: player.sprite.halfSize,
+					velocity: player.velocity,
+				},
+				{
+					position: c.sprite.position,
+					tpos: c.sprite.position.clone().subtract(c.sprite.halfSize),
+					halfSize: c.sprite.halfSize,
+					velocity: new Vec2(0, 0),
+				},
+				false,
+				false
+			);
+
+			if (collision) {
+				col = true;
+				text.update((u) => c.data.text);
+				player.currentCheckpoint = c;
+
+				break;
+			}
+		}
+
+		if (!col) {
+			text.update((u) => '');
 		}
 	}
 

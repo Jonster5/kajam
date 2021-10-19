@@ -4,6 +4,7 @@ import { Sprite } from '@api/sprite';
 import { Vec2 } from '@api/vec2';
 import { GameMap } from '@classes/map';
 import { Player } from '@classes/player';
+import { Pistol } from '@classes/weapons';
 import type {
 	ParsedActItem,
 	ParsedAssets,
@@ -11,6 +12,7 @@ import type {
 	ParsedCharacterItem,
 } from '@data/assetTypes';
 import type { GameProperties } from '@utils/gameUtils';
+import { Writable, writable } from 'svelte/store';
 
 export class Act1Game implements GameProperties {
 	assets: ParsedAssets;
@@ -22,8 +24,9 @@ export class Act1Game implements GameProperties {
 	stage: Sprite<Stage>;
 
 	map: GameMap;
-
 	player: Player;
+
+	showText: Writable<string>;
 
 	pause: boolean;
 
@@ -42,12 +45,17 @@ export class Act1Game implements GameProperties {
 
 		this.map = new GameMap(this.assets, this.act, this.stage);
 
-		this.canvas.update = () => {
-			this.player.update();
+		this.pause = false;
 
+		this.showText = writable('');
+
+		this.canvas.update = () => {
+			if (this.pause) return;
+
+			this.player.update();
 			this.map.update(this.stage);
 
-			this.map.checkCollisions(this.player);
+			this.map.checkCollisions(this.player, this.showText);
 
 			this.stage.position.set(this.player.position.clone().negate());
 		};
@@ -56,6 +64,10 @@ export class Act1Game implements GameProperties {
 
 		this.music.audio.loop = true;
 		this.music.audio.restart();
+
+		window.addEventListener('keydown', (e) => {
+			if (e.key === 'Escape') this.pause = !this.pause;
+		});
 	}
 
 	spawnPlayer(u: ParsedCharacterItem): void {
@@ -65,6 +77,13 @@ export class Act1Game implements GameProperties {
 			u,
 			this.stage,
 			this.map.getSpawnCoords()
+		);
+
+		this.player.pickupWeapon(
+			new Pistol(this.player, [
+				this.assets.images.find((i) => i.name === 'pistol_right'),
+				this.assets.images.find((i) => i.name === 'pistol_left'),
+			])
 		);
 	}
 
