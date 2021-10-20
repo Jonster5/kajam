@@ -1,0 +1,8 @@
+tasks:
+  - init: yarn
+
+ports:
+  - port: 5000
+    visibility: public
+    onOpen: notify
+    
