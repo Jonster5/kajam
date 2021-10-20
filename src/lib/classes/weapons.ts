@@ -2,23 +2,26 @@ import { Texture, Stage, Rectangle } from '@api/material';
 import { Sprite } from '@api/sprite';
 import { Vec2 } from '@api/vec2';
 import type { Player } from '@classes/player';
-import type { ParsedImageItem } from '@data/assetTypes';
+import type { ParsedAssets, ParsedImageItem } from '@data/assetTypes';
 import type { Bullet } from '@data/types';
 import type { WeaponProperties } from '@utils/weaponUtils';
 
 export class Pistol implements WeaponProperties {
 	sprite: Sprite<Texture>;
 	bullets: Bullet[];
+	bulletSprite: [HTMLImageElement];
 	name: string;
 	damage: number;
 	fireInterval: number;
 
-	constructor(player: Player, img: [ParsedImageItem, ParsedImageItem]) {
+	constructor(player: Player, img: [ParsedImageItem, ParsedImageItem], assets: ParsedAssets) {
 		this.sprite = new Sprite(
 			new Texture({ frames: img.map((i) => i.image) }),
 			new Vec2(15, 8),
-			new Vec2(15, 2)
+			new Vec2(15, 0)
 		);
+
+		this.bulletSprite = [assets.images.find((i) => i.name === 'bullet').image];
 
 		player.arm.add(this.sprite);
 
@@ -32,24 +35,33 @@ export class Pistol implements WeaponProperties {
 	update() {
 		for (let b of this.bullets) {
 			b.sprite.position.add(b.sprite.velocity);
+
+			if (b.hit) {
+				this.bullets.splice(this.bullets.indexOf(b), 1);
+			}
 		}
 	}
 
 	fire(stage: Sprite<Stage>, coords: Vec2, mPos: Vec2): void {
 		const sprite = new Sprite(
-			new Rectangle({ texture: 'gold' }),
-			new Vec2(5, 5),
-			coords.clone()
+			new Texture({ frames: this.bulletSprite }),
+			new Vec2(15, 5),
+			coords.clone(),
+			-mPos.angle
 		);
 
-		sprite.velocity = coords.clone().normalize().multiply(20);
+		sprite.velocity.set(1, 1);
+		sprite.velocity.angle = -mPos.angle;
+		sprite.velocity.magnitude = 40;
 
 		stage.add(sprite);
 
 		this.bullets.push({
 			damage: this.damage,
+			start: coords,
 			target: mPos.clone().subtract(stage.position),
 			sprite,
+			hit: false,
 		});
 	}
 

@@ -4,6 +4,8 @@ import type { Vec2 } from '@api/vec2';
 
 export type Direction = 'up' | 'down' | 'right' | 'left';
 
+export type Strength = 'weak' | 'mid' | 'strong' | 'boss';
+
 export interface Settings {
 	music: number;
 	sfx: number;
@@ -24,9 +26,11 @@ export interface Block {
 }
 
 export interface Bullet {
-	sprite: Sprite<Rectangle>;
+	sprite: Sprite<Texture>;
 	damage: number;
+	start: Vec2;
 	target: Vec2;
+	hit: boolean;
 }
 
 export type CollisionType = 'top' | 'bottom' | 'right' | 'left' | 'any' | '';

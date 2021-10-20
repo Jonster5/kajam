@@ -1,7 +1,11 @@
 [
 	{
-		"name": "thing",
-		"image": "thing.png"
+		"name": "bullet",
+		"image": "bullet.png"
+	},
+	{
+		"name": "bullet_hole",
+		"image": "bullet_hole.png"
 	},
 	{
 		"name": "pistol_right",

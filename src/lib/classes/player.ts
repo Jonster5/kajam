@@ -4,6 +4,7 @@ import { Vec2 } from '@api/vec2';
 import type { Pistol, SMG, Sniper } from '@classes/weapons';
 import type { ParsedAssets, ParsedCharacterItem } from '@data/assetTypes';
 import type { Block } from '@data/types';
+import { writable, Writable } from 'svelte/store';
 
 export class Player {
 	sprite: Sprite<Texture>;
@@ -20,6 +21,10 @@ export class Player {
 	up: boolean;
 	down: boolean;
 
+	speed: number;
+
+	health: Writable<number>;
+
 	weapon: SMG | Sniper | Pistol;
 
 	constructor(
@@ -32,7 +37,7 @@ export class Player {
 		this.rTexture = new Texture({ frames: character.right });
 		this.lTexture = new Texture({ frames: character.left });
 
-		this.sprite = new Sprite(this.rTexture, new Vec2(24, 48), spawn.sprite.position);
+		this.sprite = new Sprite(this.rTexture, character.size.clone(), spawn.sprite.position);
 		this.arm = new Sprite(new Texture({ frames: [character.arm] }), new Vec2(32, 8));
 
 		this.sprite.add(this.arm);
@@ -43,6 +48,9 @@ export class Player {
 		this.left = false;
 		this.up = false;
 		this.down = false;
+
+		this.health = writable(character.health);
+		this.speed = character.speed;
 
 		this.mPos = new Vec2(0, 0);
 
@@ -153,17 +161,17 @@ export class Player {
 	update() {
 		const delta = new Vec2(0, 0);
 
-		if (this.left) delta.x -= 9;
-		if (this.right) delta.x += 9;
-		if (this.up) delta.y += 9;
-		if (this.down) delta.y -= 9;
+		if (this.left) delta.x -= (3 * this.speed) / 4;
+		if (this.right) delta.x += (3 * this.speed) / 4;
+		if (this.up) delta.y += (3 * this.speed) / 4;
+		if (this.down) delta.y -= (3 * this.speed) / 4;
 
 		this.velocity.add(delta);
 
 		this.velocity.multiply(0.6);
 
-		if (this.velocity.magnitude > 15) {
-			this.velocity.normalize().multiply(9);
+		if (this.velocity.magnitude > this.speed) {
+			this.velocity.normalize().multiply(this.speed);
 		}
 
 		if (this.velocity.magnitude < 0.5) {

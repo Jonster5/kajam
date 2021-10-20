@@ -22,7 +22,7 @@ export interface GameMapObject {
 	setupBackground(act: ParsedActItem, stage: Sprite): void;
 	setupMap(stage: Sprite): void;
 
-	update(stage: Sprite): void;
+	update(player: Player): void;
 	checkCollisions(player: Player, text: Writable<string>): void;
 
 	getSpawnCoords(): Block;

@@ -89,8 +89,6 @@
 		{ "type": "tutorial_wall", "x": 24, "y": 1, "solid": true },
 		{ "type": "tutorial_wall", "x": 24, "y": -2, "solid": true },
 		{ "type": "tutorial_wall", "x": 24, "y": -1, "solid": true },
-		{ "type": "door", "x": 24, "y": 0, "solid": false },
-		{ "type": "trigger", "x": 25, "y": 0, "solid": false },
 		{ "type": "tutorial_wall", "x": 24, "y": 3, "solid": true },
 		{ "type": "tutorial_wall", "x": 24, "y": 4, "solid": true },
 		{ "type": "tutorial_wall", "x": 24, "y": 5, "solid": true },
@@ -148,7 +146,6 @@
 			"solid": false,
 			"data": { "text": "checkpoint 3" }
 		},
-		{ "type": "door", "x": 36, "y": 0, "solid": false },
 		{ "type": "finale", "x": 38, "y": 0, "solid": false },
 		{ "type": "tutorial_wall", "x": 37, "y": -2, "solid": true },
 		{ "type": "tutorial_wall", "x": 38, "y": -2, "solid": true },
@@ -161,7 +158,16 @@
 		{ "type": "tutorial_wall", "x": 39, "y": 2, "solid": true },
 		{ "type": "tutorial_wall", "x": 38, "y": 2, "solid": true },
 		{ "type": "tutorial_wall", "x": 37, "y": 2, "solid": true },
-		{ "type": "spawn", "x": 30, "y": 0, "solid": false },
+		{
+			"type": "spawn",
+			"x": 30,
+			"y": 0,
+			"solid": false,
+			"data": {
+				"enemyCount": 1,
+				"enemyStrength": "weak"
+			}
+		},
 		{ "type": "tutorial_wall_side", "x": -2, "y": 2, "solid": false },
 		{ "type": "tutorial_wall_side", "x": -1, "y": 2, "solid": false },
 		{ "type": "tutorial_wall_side", "x": 0, "y": 2, "solid": false },

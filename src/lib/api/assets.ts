@@ -1,4 +1,5 @@
 import { actx, Sound } from '@api/audio';
+import { Vec2 } from '@api/vec2';
 import {
 	ACT_URL,
 	AUDIO_URL,
@@ -85,7 +86,7 @@ export async function LoadAct(input: RawActItem): Promise<ParsedActItem> {
 }
 
 export async function LoadCharacter(input: RawCharacterItem): Promise<ParsedCharacterItem> {
-	const { name, left, right, arm } = input;
+	const { name, left, right, arm, width, height, health, damage, speed } = input;
 
 	if (name === undefined || left === undefined || right === undefined || arm === undefined)
 		throw new Error('Error loading character');
@@ -99,6 +100,10 @@ export async function LoadCharacter(input: RawCharacterItem): Promise<ParsedChar
 			right.map((i) => LoadImage(`${BASE_URL}${CHARACTER_URL}/images/${i}`))
 		),
 		arm: await LoadImage(`${BASE_URL}${CHARACTER_URL}/images/${arm}`),
+		size: new Vec2(width, height),
+		damage,
+		speed,
+		health,
 	};
 }
 

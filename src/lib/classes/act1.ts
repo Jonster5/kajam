@@ -53,7 +53,7 @@ export class Act1Game implements GameProperties {
 			if (this.pause) return;
 
 			this.player.update();
-			this.map.update(this.stage);
+			this.map.update(this.player);
 
 			this.map.checkCollisions(this.player, this.showText);
 
@@ -80,10 +80,14 @@ export class Act1Game implements GameProperties {
 		);
 
 		this.player.pickupWeapon(
-			new Pistol(this.player, [
-				this.assets.images.find((i) => i.name === 'pistol_right'),
-				this.assets.images.find((i) => i.name === 'pistol_left'),
-			])
+			new Pistol(
+				this.player,
+				[
+					this.assets.images.find((i) => i.name === 'pistol_right'),
+					this.assets.images.find((i) => i.name === 'pistol_left'),
+				],
+				this.assets
+			)
 		);
 	}
 

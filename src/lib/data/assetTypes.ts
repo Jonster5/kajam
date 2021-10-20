@@ -1,4 +1,5 @@
 import type { Sound } from '@api/audio';
+import type { Vec2 } from '@api/vec2';
 
 export const BASE_URL = '/data';
 
@@ -114,6 +115,13 @@ export interface RawCharacterItem {
 	right: string[];
 	left: string[];
 	arm: string;
+
+	width: number;
+	height: number;
+
+	health: number;
+	damage: number;
+	speed: number;
 }
 
 export interface ParsedCharacterItem {
@@ -122,4 +130,9 @@ export interface ParsedCharacterItem {
 	right: HTMLImageElement[];
 	left: HTMLImageElement[];
 	arm: HTMLImageElement;
+
+	size: Vec2;
+	health: number;
+	damage: number;
+	speed: number;
 }
