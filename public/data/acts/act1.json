@@ -2,7 +2,7 @@
 	"title": "Tutorial",
 	"description": "The perfect guide for an aspiring mercenary who is desperate need of cash, and is willing to dive into a huge maze and fight potentially life threating foes",
 	"background": "tutorial_floor.png",
-	"order": 0,
+	"order": 1,
 
 	"width": 192,
 	"height": 108,
@@ -49,7 +49,7 @@
 			"y": 0,
 			"solid": false,
 			"data": {
-				"text": "Welcome! Welcome my dear mercenary!<br>You have been hired to retrieve some very important items for me!<br>Unfortunately, these... items... appear to be at the center of some quite huge labrynths strewn across the world, filled to the brim with deadly creatures.<br>The good news is I have prepared a little mock battle for you, to test your skills before venturing into the deep.<br><br>Use W A S and D to move"
+				"text": "Welcome! Welcome my dear mercenary!<br>You have been hired to retrieve some very important items for me!<br>Unfortunately, these... items... appear to be at the center of some quite huge labrynths strewn across the world, filled to the brim with deadly creatures.<br>The good news is I have prepared a little mock battle for you, to test your skills before venturing into the deep.<br><br><br>Use W A S D to move"
 			}
 		},
 		{ "type": "tutorial_wall", "x": 10, "y": 2, "solid": true },
@@ -87,6 +87,7 @@
 		},
 		{ "type": "tutorial_wall", "x": 24, "y": 2, "solid": true },
 		{ "type": "tutorial_wall", "x": 24, "y": 1, "solid": true },
+		{ "type": "tutorial_wall_side", "x": 24, "y": 0, "solid": false },
 		{ "type": "tutorial_wall", "x": 24, "y": -2, "solid": true },
 		{ "type": "tutorial_wall", "x": 24, "y": -1, "solid": true },
 		{ "type": "tutorial_wall", "x": 24, "y": 3, "solid": true },
@@ -110,6 +111,7 @@
 		{ "type": "tutorial_wall", "x": 36, "y": 3, "solid": true },
 		{ "type": "tutorial_wall", "x": 36, "y": 2, "solid": true },
 		{ "type": "tutorial_wall", "x": 36, "y": 1, "solid": true },
+		{ "type": "tutorial_wall_side", "x": 36, "y": 0, "solid": false },
 		{ "type": "tutorial_wall", "x": 36, "y": -1, "solid": true },
 		{ "type": "tutorial_wall", "x": 36, "y": -2, "solid": true },
 		{ "type": "tutorial_wall", "x": 36, "y": -3, "solid": true },
@@ -160,11 +162,11 @@
 		{ "type": "tutorial_wall", "x": 37, "y": 2, "solid": true },
 		{
 			"type": "spawn",
-			"x": 30,
+			"x": 32,
 			"y": 0,
 			"solid": false,
 			"data": {
-				"enemyCount": 1,
+				"enemyCount": 2,
 				"enemyStrength": "weak"
 			}
 		},

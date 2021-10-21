@@ -1,9 +1,10 @@
 {
 	"name": "Player",
 
-	"right": ["player_right.png", "player_right_1.png"],
-	"left": ["player_left.png", "player_left_1.png"],
-	"arm": "player_arm.png",
+	"right": ["player_right.png", "player_right_1.png", "player_right_2.png"],
+	"left": ["player_left.png", "player_left_1.png", "player_left_2.png"],
+	"arm_right": "player_arm_right.png",
+	"arm_left": "player_arm_left.png",
 
 	"width": 24,
 	"height": 48,

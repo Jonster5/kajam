@@ -84,7 +84,7 @@
 	.button {
 		@include Button;
 		width: 50%;
-		margin: 4vh 0;
+		margin: 10vh 0;
 	}
 
 	.box {

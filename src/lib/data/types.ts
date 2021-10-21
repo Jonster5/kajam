@@ -1,10 +1,17 @@
 import type { Rectangle, Texture } from '@api/material';
 import type { Sprite } from '@api/sprite';
 import type { Vec2 } from '@api/vec2';
+import type { Breadcrumb, Pistol, SMG, Sniper } from '@classes/weapons';
+import type { Writable } from 'svelte/store';
 
 export type Direction = 'up' | 'down' | 'right' | 'left';
 
 export type Strength = 'weak' | 'mid' | 'strong' | 'boss';
+
+export interface UIData {
+	pHealth: Writable<number>;
+	pGear: Writable<(Pistol | SMG | Sniper | Breadcrumb)[]>;
+}
 
 export interface Settings {
 	music: number;

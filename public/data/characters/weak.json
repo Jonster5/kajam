@@ -3,12 +3,13 @@
 
 	"right": ["player_right.png", "player_right_1.png"],
 	"left": ["player_left.png", "player_left_1.png"],
-	"arm": "player_arm.png",
+	"arm_right": "player_arm_right.png",
+	"arm_left": "player_arm_left.png",
 
-	"width": 32,
+	"width": 48,
 	"height": 56,
 
 	"health": 50,
-	"damage": 10,
+	"damage": 0.3,
 	"speed": 5
 }

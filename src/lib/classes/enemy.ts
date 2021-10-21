@@ -46,6 +46,20 @@ export class Enemy {
 		this.stage.add(this.sprite);
 	}
 
+	takeDamage(amount: number, enemies: Enemy[], player: Player) {
+		this.health -= amount;
+		this.sprite.children[0]!.size.x = this.health < 0 ? 0 : this.health;
+
+		this.sprite.material.filter = 'brightness(1.5)';
+		setTimeout(() => {
+			this.sprite.material.filter = 'none';
+		}, 100);
+
+		if (this.health < 1) {
+			this.kill(enemies, player);
+		}
+	}
+
 	update(player: Player) {
 		if (
 			Math.abs(this.position.x - player.position.x) > 600 &&
@@ -61,6 +75,21 @@ export class Enemy {
 		}
 
 		this.sprite.position.add(this.sprite.velocity);
+	}
+
+	kill(enemies: Enemy[], player: Player) {
+		enemies.splice(enemies.indexOf(this), 1);
+
+		this.sprite.rotation = Math.PI / 2;
+		this.sprite.position.y -= this.sprite.halfSize.y;
+		this.sprite.material.stop();
+
+		this.stage.remove(player.sprite);
+		this.stage.add(player.sprite);
+
+		setTimeout(() => {
+			this.sprite.parent.remove(this.sprite);
+		}, 10000);
 	}
 
 	get position() {

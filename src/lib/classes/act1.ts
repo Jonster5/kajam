@@ -11,6 +11,7 @@ import type {
 	ParsedAudioItem,
 	ParsedCharacterItem,
 } from '@data/assetTypes';
+import type { UIData } from '@data/types';
 import type { GameProperties } from '@utils/gameUtils';
 import { Writable, writable } from 'svelte/store';
 
@@ -30,9 +31,9 @@ export class Act1Game implements GameProperties {
 
 	pause: boolean;
 
-	constructor(target: HTMLElement, assets: ParsedAssets, act: ParsedActItem) {
+	constructor(target: HTMLElement, assets: ParsedAssets) {
 		this.assets = assets;
-		this.act = act;
+		this.act = assets.acts.find((a) => a.order === 1);
 
 		this.music = this.assets.sounds.find((x) => x.name === 'tutbg')!;
 
@@ -78,17 +79,13 @@ export class Act1Game implements GameProperties {
 			this.stage,
 			this.map.getSpawnCoords()
 		);
+	}
 
-		this.player.pickupWeapon(
-			new Pistol(
-				this.player,
-				[
-					this.assets.images.find((i) => i.name === 'pistol_right'),
-					this.assets.images.find((i) => i.name === 'pistol_left'),
-				],
-				this.assets
-			)
-		);
+	UIData(): UIData {
+		return {
+			pHealth: this.player.health,
+			pGear: this.player.gear,
+		};
 	}
 
 	kill(): void {

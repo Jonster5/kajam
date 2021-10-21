@@ -32,7 +32,9 @@
 	in:fly={{ easing: cubicOut, delay: 500, duration: 500, y: -300 }}
 	out:fly={{ easing: cubicIn, delay: 50, duration: 450, y: -300 }}
 >
-	<div class="title">Labyrinth</div>
+	<div class="title">
+		<span class="one">Money, Mazes, and </span><span class="two">Monsters</span>
+	</div>
 
 	<div>
 		<div class="button" on:click={() => click('play')}>Start</div>
@@ -53,17 +55,28 @@
 		flex-direction: column;
 		align-items: left;
 		justify-content: space-between;
+		background: radial-gradient(#00000080, #000000ff),
+			url('images/title_bg.png') no-repeat center center fixed;
+		background-size: cover;
 	}
 
 	.title {
 		font-family: 'Righteous';
 		-moz-user-select: none;
 		-webkit-user-select: none;
-		color: $title;
-		text-shadow: 0 0 20vh $title;
 		font-size: 7vw;
 		margin: 1vh 1vw;
 		height: 50%;
+
+		.one {
+			color: $title;
+			text-shadow: 0 0 20vh $title;
+		}
+
+		.two {
+			color: crimson;
+			text-shadow: 0 0 20vh crimson;
+		}
 	}
 
 	.button {

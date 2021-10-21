@@ -86,10 +86,7 @@ export async function LoadAct(input: RawActItem): Promise<ParsedActItem> {
 }
 
 export async function LoadCharacter(input: RawCharacterItem): Promise<ParsedCharacterItem> {
-	const { name, left, right, arm, width, height, health, damage, speed } = input;
-
-	if (name === undefined || left === undefined || right === undefined || arm === undefined)
-		throw new Error('Error loading character');
+	const { name, left, right, arm_right, arm_left, width, height, health, damage, speed } = input;
 
 	return {
 		name,
@@ -99,7 +96,10 @@ export async function LoadCharacter(input: RawCharacterItem): Promise<ParsedChar
 		right: await Promise.all(
 			right.map((i) => LoadImage(`${BASE_URL}${CHARACTER_URL}/images/${i}`))
 		),
-		arm: await LoadImage(`${BASE_URL}${CHARACTER_URL}/images/${arm}`),
+		arm: [
+			await LoadImage(`${BASE_URL}${CHARACTER_URL}/images/${arm_left}`),
+			await LoadImage(`${BASE_URL}${CHARACTER_URL}/images/${arm_right}`),
+		],
 		size: new Vec2(width, height),
 		damage,
 		speed,

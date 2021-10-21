@@ -176,6 +176,38 @@ export class GameMap implements GameMapObject {
 						} catch {}
 					}
 				}
+
+				if (this.enemies.length > 0) {
+					for (let e of this.enemies) {
+						if (Math.abs(b.sprite.position.x - e.position.x) > 200) continue;
+						if (Math.abs(b.sprite.position.y - e.position.y) > 200) continue;
+
+						const collision = rectangleCollision(
+							{
+								position: b.sprite.position,
+								tpos: b.sprite.position.clone().subtract(10),
+								halfSize: new Vec2(10, 10),
+								velocity: b.sprite.velocity,
+							},
+							{
+								position: e.sprite.position,
+								tpos: e.sprite.position.clone().subtract(e.sprite.halfSize),
+								halfSize: e.sprite.halfSize,
+								velocity: new Vec2(0, 0),
+							},
+							false,
+							false
+						);
+
+						if (collision) {
+							try {
+								this.stage.remove(b.sprite);
+								b.hit = true;
+								e.takeDamage(player.weapon.damage, this.enemies, player);
+							} catch {}
+						}
+					}
+				}
 			}
 		}
 
@@ -223,6 +255,22 @@ export class GameMap implements GameMapObject {
 					true,
 					false
 				);
+
+				if (collision) {
+					player.health.update((h) => h - e1.damage);
+
+					if (player.canGrunt) {
+						this.assets.sounds.find((s) => s.name === 'click').audio.restart();
+						player.canGrunt = false;
+						player.sprite.material.filter = 'brightness(3)';
+
+						setTimeout(() => {
+							player.canGrunt = true;
+							player.rTexture.filter = 'none';
+							player.lTexture.filter = 'none';
+						}, 750);
+					}
+				}
 			}
 		}
 
@@ -260,8 +308,8 @@ export class GameMap implements GameMapObject {
 		}
 
 		for (let s of this.spawners) {
-			if (Math.abs(player.position.x - s.x * 100) > 600) continue;
-			if (Math.abs(player.position.y - s.y * 100) > 600) continue;
+			if (Math.abs(player.position.x - s.x * 100) > 800) continue;
+			if (Math.abs(player.position.y - s.y * 100) > 800) continue;
 
 			for (let i = 0; i < s.data.enemyCount; i++) {
 				this.enemies.push(

@@ -20,9 +20,9 @@ export class Act2Game implements GameProperties {
 
 	pause: boolean;
 
-	constructor(p: HTMLElement, assets: ParsedAssets, act: ParsedActItem) {
+	constructor(p: HTMLElement, assets: ParsedAssets) {
 		this.assets = assets;
-		this.act = act;
+		this.act = assets.acts.find((a) => a.order === 2);
 
 		this.canvas = new Canvas(p, this.act.width * 20);
 		this.stage = new Sprite(new Stage(), new Vec2(this.act.width * 20, this.act.height * 20));

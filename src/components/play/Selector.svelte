@@ -14,20 +14,20 @@
 	const acts = assets.acts.sort((a, b) => a.order - b.order);
 	const clickEffect = assets.sounds.find((a) => a.name === 'click').audio;
 
-	let selectedAct = 0;
+	let selectedAct = 1;
 
-	$: act = acts[selectedAct];
+	$: act = acts[selectedAct - 1];
 
 	const sDown = () => {
 		clickEffect.restart();
 		selectedAct--;
-		if (selectedAct < 0) selectedAct = acts.length - 1;
+		if (selectedAct < 1) selectedAct = acts.length;
 	};
 
 	const sUp = () => {
 		clickEffect.restart();
 		selectedAct++;
-		if (selectedAct > acts.length - 1) selectedAct = 0;
+		if (selectedAct > acts.length) selectedAct = 1;
 	};
 
 	const click = (screen: string): void => {
@@ -38,12 +38,6 @@
 			act,
 		});
 	};
-
-	onMount(() => {});
-
-	onDestroy(() => {
-		console.log('destroyed');
-	});
 </script>
 
 <main

@@ -1,22 +1,15 @@
 <script lang="ts">
 	import type { ParsedActItem, ParsedAssets } from '@data/assetTypes';
 	import { onDestroy, onMount } from 'svelte';
-	import ActnGame from '@classes/acts';
-	import type { Act1Game } from '@classes/act1';
-	import type { Act2Game } from '@classes/act2';
-	import type { Act3Game } from '@classes/act3';
-	import type { Act4Game } from '@classes/act4';
-	import type { Act5Game } from '@classes/act5';
 	import { settings } from '@api/settings';
 	import { fly } from 'svelte/transition';
 	import { cubicIn, cubicOut } from 'svelte/easing';
 	import type { Writable } from 'svelte/store';
+	import { Act2Game } from '@classes/act2';
 
 	export let assets: ParsedAssets;
-	export let act: ParsedActItem;
 
-	const Game = ActnGame[`Act${act.order + 1}Game`]!;
-	let game: any;
+	let game: Act2Game;
 
 	let ctext: Writable<string>;
 
@@ -26,10 +19,10 @@
 		assets.sounds.find((a) => a.name === 'titlebg').audio.pause();
 		$settings.inAct = true;
 
-		game = new Game(target, assets, act);
-		game.spawnPlayer(assets.characters[0]);
+		game = new Act2Game(target, assets);
+		game.spawnPlayer(assets.characters.find((c) => c.name === 'Player'));
 
-		ctext = game.showText;
+		// ctext = game.showText
 	});
 
 	onDestroy(() => {

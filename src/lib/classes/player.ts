@@ -1,7 +1,7 @@
 import { Stage, Texture } from '@api/material';
 import { Sprite } from '@api/sprite';
 import { Vec2 } from '@api/vec2';
-import type { Pistol, SMG, Sniper } from '@classes/weapons';
+import { Breadcrumb, Pistol, SMG, Sniper } from '@classes/weapons';
 import type { ParsedAssets, ParsedCharacterItem } from '@data/assetTypes';
 import type { Block } from '@data/types';
 import { writable, Writable } from 'svelte/store';
@@ -25,7 +25,11 @@ export class Player {
 
 	health: Writable<number>;
 
-	weapon: SMG | Sniper | Pistol;
+	canGrunt: boolean;
+
+	weapon: SMG | Sniper | Pistol | Breadcrumb;
+
+	gear: Writable<Array<SMG | Sniper | Pistol | Breadcrumb>>;
 
 	constructor(
 		element: HTMLElement,
@@ -38,7 +42,7 @@ export class Player {
 		this.lTexture = new Texture({ frames: character.left });
 
 		this.sprite = new Sprite(this.rTexture, character.size.clone(), spawn.sprite.position);
-		this.arm = new Sprite(new Texture({ frames: [character.arm] }), new Vec2(32, 8));
+		this.arm = new Sprite(null, new Vec2(40, 20), new Vec2(-2, 4));
 
 		this.sprite.add(this.arm);
 
@@ -49,48 +53,36 @@ export class Player {
 		this.up = false;
 		this.down = false;
 
+		this.canGrunt = true;
 		this.health = writable(character.health);
+		this.gear = writable([]);
 		this.speed = character.speed;
-
 		this.mPos = new Vec2(0, 0);
 
-		this.weapon = undefined;
+		this.pickupWeapon(new Pistol(this, character.arm, assets));
 
 		window.addEventListener('mousemove', (e) => {
 			this.mPos.set(
 				e.screenX - window.innerWidth / 2,
 				e.screenY - window.innerHeight / 2 - 100
 			);
-			this.arm.rotation = -this.mPos.angle;
+			if (this.arm.material) this.arm.rotation = -this.mPos.angle;
 
-			if (this.mPos.x < 0) {
+			if (this.mPos.x > 0) {
 				this.sprite.material = this.rTexture;
-				if (this.weapon) {
-					this.weapon.sprite.material.goto(1);
-					this.weapon.sprite.rotation = Math.PI;
-					this.weapon.sprite.position.y = -3;
-				}
+				this.sprite.material.goto(0);
+				if (this.arm.material) this.arm.material.goto(1);
+				this.arm.position.x = -2;
 			} else {
 				this.sprite.material = this.lTexture;
-				this.weapon.sprite.material.goto(0);
-				this.weapon.sprite.rotation = 0;
-				this.weapon.sprite.position.y = 3;
+				this.sprite.material.goto(0);
+				if (this.arm.material) this.arm.material.goto(0);
+				this.arm.position.x = 2;
 			}
 		});
 
 		window.addEventListener('mousedown', (e) => {
-			if (this.weapon && (this.weapon.name === 'Pistol' || this.weapon.name === 'Sniper')) {
-				this.weapon.fire(
-					stage,
-					new Vec2(
-						25 * Math.cos(-this.mPos.angle) + this.position.x,
-						25 * Math.sin(-this.mPos.angle) + this.position.y
-					),
-					this.mPos
-				);
-			} else if (this.weapon.name === 'SMG') {
-				this.weapon.startFiring(stage);
-			}
+			if (this.weapon) this.weapon.startFiring(stage, this.position, this.mPos);
 		});
 
 		window.addEventListener('mouseup', (e) => {
@@ -102,25 +94,21 @@ export class Player {
 				case 'w':
 				case 'ArrowUp':
 					this.up = true;
-					this.sprite.material.start(100);
 					break;
 
 				case 's':
 				case 'ArrowDown':
 					this.down = true;
-					this.sprite.material.start(100);
 					break;
 
 				case 'a':
 				case 'ArrowLeft':
 					this.left = true;
-					this.sprite.material.start(100);
 					break;
 
 				case 'd':
 				case 'ArrowRight':
 					this.right = true;
-					this.sprite.material.start(100);
 					break;
 			}
 		});
@@ -150,12 +138,10 @@ export class Player {
 		});
 	}
 
-	pickupWeapon(weapon: Pistol | SMG | Sniper) {
-		if (this.weapon) this.arm.remove(this.weapon.sprite);
-
+	pickupWeapon(weapon: Pistol | SMG | Sniper | Breadcrumb) {
 		this.weapon = weapon;
 
-		this.arm.add(this.weapon.sprite);
+		this.gear.update((g) => [...g, weapon]);
 	}
 
 	update() {
@@ -174,8 +160,10 @@ export class Player {
 			this.velocity.normalize().multiply(this.speed);
 		}
 
-		if (this.velocity.magnitude < 0.5) {
+		if (this.velocity.magnitude > 0.5) this.sprite.material.start(100);
+		else {
 			this.sprite.material.stop();
+			this.sprite.material.goto(0);
 		}
 
 		this.position.add(this.velocity);

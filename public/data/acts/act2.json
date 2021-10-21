@@ -2,7 +2,7 @@
 	"title": "Act Two",
 	"description": "second act",
 	"background": "bg.png",
-	"order": 1,
+	"order": 2,
 
 	"width": 100,
 	"height": 100,

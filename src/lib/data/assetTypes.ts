@@ -78,10 +78,10 @@ export interface ParsedActItem {
 	description: string;
 	order: number;
 
+	coverImage: HTMLImageElement;
+
 	width: number;
 	height: number;
-
-	coverImage: HTMLImageElement;
 
 	background: HTMLImageElement;
 	grid: ParsedGridItem[];
@@ -114,7 +114,8 @@ export interface RawCharacterItem {
 
 	right: string[];
 	left: string[];
-	arm: string;
+	arm_right: string;
+	arm_left: string;
 
 	width: number;
 	height: number;
@@ -129,7 +130,7 @@ export interface ParsedCharacterItem {
 
 	right: HTMLImageElement[];
 	left: HTMLImageElement[];
-	arm: HTMLImageElement;
+	arm: [HTMLImageElement, HTMLImageElement];
 
 	size: Vec2;
 	health: number;
