@@ -1,8 +1,8 @@
 {
 	"name": "weak",
 
-	"right": ["player_right.png", "player_right_1.png"],
-	"left": ["player_left.png", "player_left_1.png"],
+	"right": ["weak_right.png", "weak_right_1.png", "weak_right_2.png", "weak_right_1.png"],
+	"left": ["weak_left.png", "weak_left_1.png", "weak_left_2.png", "weak_left_1.png"],
 	"arm_right": "player_arm_right.png",
 	"arm_left": "player_arm_left.png",
 

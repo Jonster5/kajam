@@ -29,6 +29,8 @@ export class Act1Game implements GameProperties {
 
 	showText: Writable<string>;
 
+	win: Writable<boolean>;
+
 	pause: boolean;
 
 	constructor(target: HTMLElement, assets: ParsedAssets) {
@@ -36,6 +38,8 @@ export class Act1Game implements GameProperties {
 		this.act = assets.acts.find((a) => a.order === 1);
 
 		this.music = this.assets.sounds.find((x) => x.name === 'tutbg')!;
+
+		this.win = writable(false);
 
 		this.canvas = new Canvas(target, window.innerWidth);
 		this.stage = new Sprite(
@@ -51,7 +55,15 @@ export class Act1Game implements GameProperties {
 		this.showText = writable('');
 
 		this.canvas.update = () => {
-			if (this.pause) return;
+			if (this.pause) {
+				this.player.pause = true;
+
+				this.player.update();
+				return;
+			} else {
+				this.player.pause = false;
+			}
+			if (this.map.win) this.win.set(true);
 
 			this.player.update();
 			this.map.update(this.player);
@@ -64,7 +76,9 @@ export class Act1Game implements GameProperties {
 		this.canvas.start();
 
 		this.music.audio.loop = true;
-		this.music.audio.restart();
+		setTimeout(() => {
+			this.music.audio.restart();
+		}, 500);
 
 		window.addEventListener('keydown', (e) => {
 			if (e.key === 'Escape') this.pause = !this.pause;
@@ -90,6 +104,12 @@ export class Act1Game implements GameProperties {
 
 	kill(): void {
 		this.canvas.stop();
-		this.music.audio.pause();
+		this.assets.sounds.forEach((s) => s.audio.pause());
+
+		this.player.kill();
+		this.map.kill();
+
+		this.map = undefined;
+		this.player = undefined;
 	}
 }

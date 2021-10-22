@@ -23,7 +23,10 @@
 
 	onMount(() => {
 		bg.loop = true;
-		if (!bg.playing) bg.restart();
+		if (!bg.playing)
+			setTimeout(() => {
+				bg.restart();
+			}, 500);
 		$settings.inAct = false;
 	});
 </script>
@@ -37,7 +40,7 @@
 	</div>
 
 	<div>
-		<div class="button" on:click={() => click('play')}>Start</div>
+		<div class="button" on:click={() => click('game options')}>Start</div>
 		<div class="button" on:click={() => click('showSettings')}>Settings</div>
 	</div>
 </main>

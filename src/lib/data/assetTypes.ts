@@ -51,12 +51,12 @@ export interface ParsedAudioItem {
 
 export interface RawBlockItem {
 	type: string;
-	image: string;
+	image: string[];
 }
 
 export interface ParsedBlockItem {
 	type: string;
-	image: HTMLImageElement;
+	image: HTMLImageElement[];
 }
 
 export interface RawActItem {

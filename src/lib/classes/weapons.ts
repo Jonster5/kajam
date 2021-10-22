@@ -8,6 +8,7 @@ import type { WeaponProperties } from '@utils/weaponUtils';
 
 export class Breadcrumb implements WeaponProperties {
 	texture: Texture;
+	player: Player;
 
 	fireEffect: ParsedAudioItem;
 	muzzleFlash: Sprite<Texture>;
@@ -19,34 +20,27 @@ export class Breadcrumb implements WeaponProperties {
 	fireInterval: NodeJS.Timeout;
 
 	canFire: boolean;
+	count: number;
 
 	constructor(player: Player, img: [HTMLImageElement, HTMLImageElement], assets: ParsedAssets) {
 		this.texture = new Texture({ frames: img });
 
-		this.fireEffect = assets.sounds.find((s) => s.name === 'click');
-
-		this.bulletSprite = [assets.images.find((i) => i.name === 'bullet').image];
+		this.bulletSprite = [assets.images.find((i) => i.name === 'crumb').image];
 
 		player.arm.material = this.texture;
+
+		this.player = player;
 
 		this.bullets = [];
 
 		this.name = 'Breadcrumb';
-		this.damage = 5;
 		this.fireInterval = null;
+		this.damage = 0;
 
 		this.canFire = true;
 	}
 
-	update() {
-		for (let b of this.bullets) {
-			b.sprite.position.add(b.sprite.velocity);
-
-			if (b.hit) {
-				this.bullets.splice(this.bullets.indexOf(b), 1);
-			}
-		}
-	}
+	update() {}
 
 	fire(stage: Sprite<Stage>, coords: Vec2, mPos: Vec2): void {
 		const pos = new Vec2(
@@ -56,26 +50,15 @@ export class Breadcrumb implements WeaponProperties {
 
 		const sprite = new Sprite(
 			new Texture({ frames: this.bulletSprite }),
-			new Vec2(15, 3),
+			new Vec2(10, 10),
 			pos.clone(),
-			-mPos.angle
+			Math.random() * Math.PI * 2
 		);
-
-		sprite.velocity.set(1, 1);
-		sprite.velocity.angle = -mPos.angle;
-		sprite.velocity.magnitude = 40;
 
 		stage.add(sprite);
 
-		this.bullets.push({
-			damage: this.damage,
-			start: pos.clone(),
-			target: mPos.clone().subtract(stage.position),
-			sprite,
-			hit: false,
-		});
-
-		this.fireEffect.audio.restart();
+		stage.remove(this.player.sprite);
+		stage.add(this.player.sprite);
 	}
 
 	startFiring(stage: Sprite<Stage>, coords: Vec2, mPos: Vec2) {
@@ -95,6 +78,8 @@ export class Breadcrumb implements WeaponProperties {
 export class Pistol implements WeaponProperties {
 	texture: Texture;
 
+	player: Player;
+
 	fireEffect: ParsedAudioItem;
 	muzzleFlash: Sprite<Texture>;
 
@@ -105,11 +90,12 @@ export class Pistol implements WeaponProperties {
 	fireInterval: NodeJS.Timeout;
 
 	canFire: boolean;
+	count: number;
 
 	constructor(player: Player, img: [HTMLImageElement, HTMLImageElement], assets: ParsedAssets) {
 		this.texture = new Texture({ frames: img });
 
-		this.fireEffect = assets.sounds.find((s) => s.name === 'click');
+		this.fireEffect = assets.sounds.find((s) => s.name === 'gunshot');
 
 		this.bulletSprite = [assets.images.find((i) => i.name === 'bullet').image];
 
@@ -118,7 +104,7 @@ export class Pistol implements WeaponProperties {
 		this.bullets = [];
 
 		this.name = 'Pistol';
-		this.damage = 5;
+		this.damage = 10;
 		this.fireInterval = null;
 
 		this.canFire = true;
@@ -185,14 +171,19 @@ export class SMG implements WeaponProperties {
 	damage: number;
 	bulletSprite: [HTMLImageElement];
 
+	player: Player;
+
 	fireInterval: NodeJS.Timeout;
 	fireEffect: ParsedAudioItem;
 	muzzleFlash: Sprite<Texture>;
 
+	canFire: boolean;
+	count: number;
+
 	constructor(player: Player, img: [HTMLImageElement, HTMLImageElement], assets: ParsedAssets) {
 		this.texture = new Texture({ frames: img });
 
-		this.fireEffect = assets.sounds.find((s) => s.name === 'click');
+		this.fireEffect = assets.sounds.find((s) => s.name === 'gunshot');
 
 		this.bulletSprite = [assets.images.find((i) => i.name === 'bullet').image];
 
@@ -264,6 +255,11 @@ export class Sniper implements WeaponProperties {
 	fireEffect: ParsedAudioItem;
 	muzzleFlash: Sprite<Texture>;
 
+	player: Player;
+
+	canFire: boolean;
+	count: number;
+
 	constructor(player: Player, img: [ParsedImageItem, ParsedImageItem]) {
 		this.texture = new Texture({ frames: img.map((i) => i.image) });
 
@@ -276,11 +272,11 @@ export class Sniper implements WeaponProperties {
 	}
 	update() {}
 
-	fire(stage: Sprite<Stage>): void {
+	fire(stage: Sprite<Stage>, coords: Vec2, mPos: Vec2): void {
 		throw new Error('Method not implemented.');
 	}
 
-	startFiring() {}
+	startFiring(stage: Sprite<Stage>, coords: Vec2, mPos: Vec2) {}
 
 	stopFiring() {}
 }

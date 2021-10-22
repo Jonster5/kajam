@@ -1,38 +1,46 @@
 [
 	{
 		"type": "grass",
-		"image": "grass.png"
+		"image": ["grass.png"]
 	},
 	{
 		"type": "dirt",
-		"image": "dirt.png"
+		"image": ["dirt.png"]
 	},
 	{
 		"type": "checkpoint",
-		"image": "checkpoint.png"
+		"image": ["checkpoint.png"]
 	},
 	{
 		"type": "tutorial_wall",
-		"image": "tutorial_wall.png"
+		"image": ["tutorial_wall.png"]
 	},
 	{
 		"type": "tutorial_wall_side",
-		"image": "tutorial_wall_side.png"
+		"image": ["tutorial_wall_side.png"]
 	},
 	{
 		"type": "finale",
-		"image": "finale.png"
+		"image": ["finale.png"]
 	},
 	{
 		"type": "trigger",
-		"image": "trigger.png"
+		"image": ["trigger.png"]
 	},
 	{
 		"type": "door",
-		"image": "door.png"
+		"image": ["door.png"]
 	},
 	{
 		"type": "spawn",
-		"image": "spawn.png"
+		"image": ["spawn.png"]
+	},
+	{
+		"type": "pistol_pickup",
+		"image": ["pedestal_pistol.png", "pedestal_empty.png"]
+	},
+	{
+		"type": "SMG_pickup",
+		"image": ["pedestal_smg.png", "pedestal_empty.png"]
 	}
 ]

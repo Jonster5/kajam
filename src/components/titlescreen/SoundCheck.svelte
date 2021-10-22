@@ -18,7 +18,7 @@
 
 <main
 	on:mousedown|once={click}
-	in:fly={{ easing: backOut, delay: 500, duration: 500, y: 300 }}
+	in:fly={{ easing: backOut, duration: 500, y: 300 }}
 	out:fly={{ easing: backIn, delay: 100, duration: 400, y: 300 }}
 >
 	<div>- Click -</div>

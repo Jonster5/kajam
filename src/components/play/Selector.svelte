@@ -16,7 +16,7 @@
 
 	let selectedAct = 1;
 
-	$: act = acts[selectedAct - 1];
+	$: act = `act ${selectedAct}`;
 
 	const sDown = () => {
 		clickEffect.restart();
@@ -35,7 +35,6 @@
 		// clickEffect.play();
 		dispatch('click', {
 			screen,
-			act,
 		});
 	};
 </script>
@@ -58,7 +57,7 @@
 		<div class="arrow"><span on:click={sUp}>{'>'}</span></div>
 	</div>
 
-	<div class="button" on:click={() => click('game')}>Play</div>
+	<div class="button" on:click={() => click(act)}>Play</div>
 </main>
 
 <style lang="scss">

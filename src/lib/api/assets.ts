@@ -112,7 +112,9 @@ export async function LoadBlock(input: RawBlockItem): Promise<ParsedBlockItem> {
 
 	return {
 		type,
-		image: await LoadImage(`${BASE_URL}${BLOCK_URL}/images/${image}`),
+		image: await Promise.all(
+			image.map((i) => LoadImage(`${BASE_URL}${BLOCK_URL}/images/${i}`))
+		),
 	};
 }
 

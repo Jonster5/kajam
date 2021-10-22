@@ -50,7 +50,7 @@ export class Enemy {
 		this.health -= amount;
 		this.sprite.children[0]!.size.x = this.health < 0 ? 0 : this.health;
 
-		this.sprite.material.filter = 'brightness(1.5)';
+		this.sprite.material.filter = 'brightness(3)';
 		setTimeout(() => {
 			this.sprite.material.filter = 'none';
 		}, 100);
@@ -72,6 +72,15 @@ export class Enemy {
 			this.velocity.set(1, 1);
 			this.velocity.angle = dif.angle + Math.PI;
 			this.velocity.magnitude = this.speed;
+		}
+
+		if (this.velocity.magnitude < 0.5) {
+			this.lTexture.stop();
+			this.rTexture.stop();
+			this.rTexture.goto(0);
+			this.lTexture.goto(0);
+		} else {
+			this.sprite.material.start(100);
 		}
 
 		this.sprite.position.add(this.sprite.velocity);

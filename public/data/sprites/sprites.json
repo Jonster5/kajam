@@ -4,6 +4,10 @@
 		"image": "bullet.png"
 	},
 	{
+		"name": "crumb",
+		"image": "crumb.png"
+	},
+	{
 		"name": "bullet_hole",
 		"image": "bullet_hole.png"
 	},
@@ -14,5 +18,21 @@
 	{
 		"name": "pistol_left",
 		"image": "pistol_left.png"
+	},
+	{
+		"name": "breadcrumb_right",
+		"image": "arm_breadcrumbs_right.png"
+	},
+	{
+		"name": "breadcrumb_left",
+		"image": "arm_breadcrumbs_left.png"
+	},
+	{
+		"name": "SMG_right",
+		"image": "arm_smg_left.png"
+	},
+	{
+		"name": "SMG_left",
+		"image": "arm_smg_right.png"
 	}
 ]

@@ -1,6 +1,6 @@
 {
 	"title": "Tutorial",
-	"description": "The perfect guide for an aspiring mercenary who is desperate need of cash, and is willing to dive into a huge maze and fight potentially life threating foes",
+	"description": "The perfect guide for an aspiring mercenary who is desperate need of cash, and is willing to dive into a huge maze and fight deadly foes to get it.",
 	"background": "tutorial_floor.png",
 	"order": 1,
 
@@ -49,7 +49,7 @@
 			"y": 0,
 			"solid": false,
 			"data": {
-				"text": "Welcome! Welcome my dear mercenary!<br>You have been hired to retrieve some very important items for me!<br>Unfortunately, these... items... appear to be at the center of some quite huge labrynths strewn across the world, filled to the brim with deadly creatures.<br>The good news is I have prepared a little mock battle for you, to test your skills before venturing into the deep.<br><br><br>Use W A S D to move"
+				"text": "Welcome my dear mercenary! It is I Mr. Deshapanesha, your local billionare, and before you dive into your assignment, I would like to offer you some assistance. You are going to be exploring a few huge labyrinths to find and kill the targets I've laid out for you. So I've prepared some things to boost your chances of success!.<br><br><br>Use WASD to move."
 			}
 		},
 		{ "type": "tutorial_wall", "x": 10, "y": 2, "solid": true },
@@ -83,7 +83,9 @@
 			"x": 13,
 			"y": 0,
 			"solid": false,
-			"data": { "text": "checkpoint two" }
+			"data": {
+				"text": "You will notice that you are holding a bag of crumbs, bread crumbs, to be specific. You will be able to lay down these crumbs whilst exploring the massive mazes in order to mark where've you been before.<br><br><br>Move your mouse to change the direction you're pointing in and left click to use your selected item (Bread crumbs)."
+			}
 		},
 		{ "type": "tutorial_wall", "x": 24, "y": 2, "solid": true },
 		{ "type": "tutorial_wall", "x": 24, "y": 1, "solid": true },
@@ -146,8 +148,11 @@
 			"x": 22,
 			"y": 0,
 			"solid": false,
-			"data": { "text": "checkpoint 3" }
+			"data": {
+				"text": "Now! pick up the pistol I have so kindly provided to you. It isn't the most powerful weapon, however it should serve you well in fighting off the hoards monsters in the mazes. Speaking of which, I have gathered a few of those monsters for you to practice on! Go on now, kill the beasts and then pick up the phone on the other side of the arena!<br><br><br>When you have multiple items you can use the number keys shown on your HUD to switch between the item in your hand."
+			}
 		},
+		{ "type": "pistol_pickup", "x": 22, "y": -2, "solid": false },
 		{ "type": "finale", "x": 38, "y": 0, "solid": false },
 		{ "type": "tutorial_wall", "x": 37, "y": -2, "solid": true },
 		{ "type": "tutorial_wall", "x": 38, "y": -2, "solid": true },
@@ -166,7 +171,7 @@
 			"y": 0,
 			"solid": false,
 			"data": {
-				"enemyCount": 2,
+				"enemyCount": 3,
 				"enemyStrength": "weak"
 			}
 		},

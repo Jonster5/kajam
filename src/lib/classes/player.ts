@@ -2,7 +2,7 @@ import { Stage, Texture } from '@api/material';
 import { Sprite } from '@api/sprite';
 import { Vec2 } from '@api/vec2';
 import { Breadcrumb, Pistol, SMG, Sniper } from '@classes/weapons';
-import type { ParsedAssets, ParsedCharacterItem } from '@data/assetTypes';
+import type { ParsedAssets, ParsedAudioItem, ParsedCharacterItem } from '@data/assetTypes';
 import type { Block } from '@data/types';
 import { writable, Writable } from 'svelte/store';
 
@@ -16,20 +16,35 @@ export class Player {
 
 	currentCheckpoint: Block;
 
+	pause: boolean;
+
 	right: boolean;
 	left: boolean;
 	up: boolean;
 	down: boolean;
 
 	speed: number;
-
+	character: ParsedCharacterItem;
 	health: Writable<number>;
 
 	canGrunt: boolean;
 
 	weapon: SMG | Sniper | Pistol | Breadcrumb;
 
-	gear: Writable<Array<SMG | Sniper | Pistol | Breadcrumb>>;
+	gear: Writable<[Breadcrumb, Pistol, SMG, Sniper]>;
+	uGear: () => void;
+
+	pg: [Breadcrumb, Pistol, SMG, Sniper];
+
+	walking: boolean;
+	step: ParsedAudioItem;
+	stepInterval: NodeJS.Timeout;
+
+	onMouseMove: (e) => void;
+	onMouseDown: (e) => void;
+	onMouseUp: (e) => void;
+	onKeyDown: (e) => void;
+	onKeyUp: (e) => void;
 
 	constructor(
 		element: HTMLElement,
@@ -41,6 +56,8 @@ export class Player {
 		this.rTexture = new Texture({ frames: character.right });
 		this.lTexture = new Texture({ frames: character.left });
 
+		this.character = character;
+
 		this.sprite = new Sprite(this.rTexture, character.size.clone(), spawn.sprite.position);
 		this.arm = new Sprite(null, new Vec2(40, 20), new Vec2(-2, 4));
 
@@ -48,20 +65,50 @@ export class Player {
 
 		stage.add(this.sprite);
 
+		this.pause = false;
+
 		this.right = false;
 		this.left = false;
 		this.up = false;
 		this.down = false;
+		this.walking = false;
 
 		this.canGrunt = true;
 		this.health = writable(character.health);
-		this.gear = writable([]);
+		this.gear = writable([undefined, undefined, undefined, undefined]);
 		this.speed = character.speed;
 		this.mPos = new Vec2(0, 0);
 
-		this.pickupWeapon(new Pistol(this, character.arm, assets));
+		this.uGear = this.gear.subscribe((g) => (this.pg = g));
 
-		window.addEventListener('mousemove', (e) => {
+		this.step = assets.sounds.find((s) => s.name === 'step');
+
+		this.stepInterval = null;
+
+		// this.pickupWeapon(
+		// 	new SMG(
+		// 		this,
+		// 		[
+		// 			assets.images.find((i) => i.name === 'SMG_right').image,
+		// 			assets.images.find((i) => i.name === 'SMG_left').image,
+		// 		],
+		// 		assets
+		// 	)
+		// );
+
+		this.pickupWeapon(
+			new Breadcrumb(
+				this,
+				[
+					assets.images.find((i) => i.name === 'breadcrumb_right').image,
+					assets.images.find((i) => i.name === 'breadcrumb_left').image,
+				],
+				assets
+			)
+		);
+
+		this.onMouseMove = (e) => {
+			if (this.pause) return;
 			this.mPos.set(
 				e.screenX - window.innerWidth / 2,
 				e.screenY - window.innerHeight / 2 - 100
@@ -70,26 +117,32 @@ export class Player {
 
 			if (this.mPos.x > 0) {
 				this.sprite.material = this.rTexture;
-				this.sprite.material.goto(0);
+				this.sprite.material.goto(this.lTexture.frames.indexOf(this.lTexture.currentFrame));
 				if (this.arm.material) this.arm.material.goto(1);
 				this.arm.position.x = -2;
 			} else {
 				this.sprite.material = this.lTexture;
-				this.sprite.material.goto(0);
+				this.sprite.material.goto(this.rTexture.frames.indexOf(this.rTexture.currentFrame));
 				if (this.arm.material) this.arm.material.goto(0);
 				this.arm.position.x = 2;
 			}
-		});
+		};
 
-		window.addEventListener('mousedown', (e) => {
+		this.onMouseDown = (e) => {
+			if (this.pause) return;
 			if (this.weapon) this.weapon.startFiring(stage, this.position, this.mPos);
-		});
+		};
 
-		window.addEventListener('mouseup', (e) => {
-			if (this.weapon) this.weapon.stopFiring();
-		});
+		this.onMouseUp = (e) => {
+			if (this.pause) return;
+			if (this.weapon)
+				this.pg.forEach((w) => {
+					if (w) w.stopFiring();
+				});
+		};
 
-		window.addEventListener('keydown', (e) => {
+		this.onKeyDown = (e) => {
+			if (this.pause) return;
 			switch (e.key) {
 				case 'w':
 				case 'ArrowUp':
@@ -110,10 +163,21 @@ export class Player {
 				case 'ArrowRight':
 					this.right = true;
 					break;
-			}
-		});
 
-		window.addEventListener('keyup', (e) => {
+				case '1':
+					if (this.pg[0]) this.switchTo(this.pg[0]);
+					break;
+				case '2':
+					if (this.pg[1]) this.switchTo(this.pg[1]);
+					break;
+				case '3':
+					if (this.pg[2]) this.switchTo(this.pg[2]);
+					break;
+			}
+		};
+
+		this.onKeyUp = (e) => {
+			if (this.pause) return;
 			switch (e.key) {
 				case 'w':
 				case 'ArrowUp':
@@ -135,16 +199,73 @@ export class Player {
 					this.right = false;
 					break;
 			}
-		});
+		};
+
+		window.addEventListener('mousemove', this.onMouseMove);
+		window.addEventListener('mousedown', this.onMouseDown);
+		window.addEventListener('mouseup', this.onMouseUp);
+		window.addEventListener('keydown', this.onKeyDown);
+		window.addEventListener('keyup', this.onKeyUp);
 	}
 
 	pickupWeapon(weapon: Pistol | SMG | Sniper | Breadcrumb) {
+		if (weapon.name === 'Pistol') {
+			this.gear.update((g) => {
+				g[1] = weapon;
+				return g;
+			});
+		} else if (weapon.name === 'SMG') {
+			this.gear.update((g) => {
+				g[2] = weapon;
+				return g;
+			});
+		} else if (weapon.name === 'Sniper') {
+			this.gear.update((g) => {
+				g[3] = weapon;
+				return g;
+			});
+		} else if (weapon.name === 'Breadcrumb') {
+			this.gear.update((g) => {
+				g[0] = weapon;
+				return g;
+			});
+		}
+
 		this.weapon = weapon;
 
-		this.gear.update((g) => [...g, weapon]);
+		if (this.mPos.x > 0) {
+			this.sprite.material = this.rTexture;
+			this.sprite.material.goto(this.lTexture.frames.indexOf(this.lTexture.currentFrame));
+			if (this.arm.material) this.arm.material.goto(1);
+			this.arm.position.x = -2;
+		} else {
+			this.sprite.material = this.lTexture;
+			this.sprite.material.goto(this.rTexture.frames.indexOf(this.rTexture.currentFrame));
+			if (this.arm.material) this.arm.material.goto(0);
+			this.arm.position.x = 2;
+		}
+	}
+
+	switchTo(weapon: Pistol | SMG | Sniper | Breadcrumb) {
+		this.weapon = weapon;
+
+		this.arm.material = this.weapon.texture;
+
+		if (this.mPos.x > 0) {
+			this.sprite.material = this.rTexture;
+			this.sprite.material.goto(this.lTexture.frames.indexOf(this.lTexture.currentFrame));
+			if (this.arm.material) this.arm.material.goto(1);
+			this.arm.position.x = -2;
+		} else {
+			this.sprite.material = this.lTexture;
+			this.sprite.material.goto(this.rTexture.frames.indexOf(this.rTexture.currentFrame));
+			if (this.arm.material) this.arm.material.goto(0);
+			this.arm.position.x = 2;
+		}
 	}
 
 	update() {
+		console.log(this.pause);
 		const delta = new Vec2(0, 0);
 
 		if (this.left) delta.x -= (3 * this.speed) / 4;
@@ -156,19 +277,43 @@ export class Player {
 
 		this.velocity.multiply(0.6);
 
+		if (this.pause) this.velocity.set(0);
+
 		if (this.velocity.magnitude > this.speed) {
 			this.velocity.normalize().multiply(this.speed);
 		}
 
-		if (this.velocity.magnitude > 0.5) this.sprite.material.start(100);
-		else {
-			this.sprite.material.stop();
-			this.sprite.material.goto(0);
+		if (this.velocity.magnitude < 0.5) {
+			this.rTexture.stop();
+			this.lTexture.stop();
+			this.rTexture.goto(0);
+			this.lTexture.goto(0);
+			this.walking = false;
+			clearInterval(this.stepInterval);
+			this.step.audio.pause();
+		} else {
+			this.sprite.material.start(100);
+			if (!this.walking) {
+				this.stepInterval = setInterval(() => {
+					this.step.audio.restart();
+				}, 200);
+				this.walking = true;
+			}
 		}
 
 		this.position.add(this.velocity);
 
-		if (this.weapon) this.weapon.update();
+		if (this.pg[1]) this.pg[1].update();
+		if (this.pg[2]) this.pg[2].update();
+		if (this.pg[3]) this.pg[3].update();
+	}
+
+	kill() {
+		window.removeEventListener('mousemove', this.onMouseMove);
+		window.removeEventListener('mousedown', this.onMouseDown);
+		window.removeEventListener('mouseup', this.onMouseUp);
+		window.removeEventListener('keydown', this.onKeyDown);
+		window.removeEventListener('keyup', this.onKeyUp);
 	}
 
 	get position(): Vec2 {

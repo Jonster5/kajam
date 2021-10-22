@@ -1,10 +1,5 @@
 [
 	{
-		"name": "gunfire",
-		"source": "gunfire.wav",
-		"effect": true
-	},
-	{
 		"name": "glory",
 		"source": "jonster5 - For the Glory of the Solar League.mp3",
 		"effect": false
@@ -22,6 +17,16 @@
 	{
 		"name": "click",
 		"source": "click.wav",
+		"effect": true
+	},
+	{
+		"name": "gunshot",
+		"source": "single_shot.wav",
+		"effect": true
+	},
+	{
+		"name": "step",
+		"source": "step.wav",
 		"effect": true
 	}
 ]

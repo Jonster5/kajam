@@ -4,6 +4,7 @@ import { Sprite } from '@api/sprite';
 import { Vec2 } from '@api/vec2';
 import { Enemy } from '@classes/enemy';
 import type { Player } from '@classes/player';
+import { Pistol } from '@classes/weapons';
 import type { ParsedActItem, ParsedAssets } from '@data/assetTypes';
 import type { Block, Settings } from '@data/types';
 import type { GameMapObject } from '@utils/mapUtils';
@@ -24,7 +25,10 @@ export class GameMap implements GameMapObject {
 	collidable: Block[];
 	checkpoints: Block[];
 	spawners: Block[];
+	pistolPickup: Block;
 	finale: Block;
+
+	win: boolean;
 
 	enemies: Enemy[];
 
@@ -40,6 +44,8 @@ export class GameMap implements GameMapObject {
 		this.spawners = [];
 		this.collidable = [];
 		this.checkpoints = [];
+
+		this.win = false;
 
 		this.setupBackground(act, stage);
 		this.setupMap(stage);
@@ -67,7 +73,7 @@ export class GameMap implements GameMapObject {
 				const img = this.assets.blocks.find((b) => b.type === type).image;
 
 				const sprite = new Sprite(
-					new Texture({ frames: [img], alpha: type === 'door' ? 0 : 1 }),
+					new Texture({ frames: img, alpha: type === 'door' ? 0 : 1 }),
 					new Vec2(100, 100),
 					new Vec2(x * 100, y * 100)
 				);
@@ -84,8 +90,9 @@ export class GameMap implements GameMapObject {
 				this.blocks.push(block);
 				if (solid) this.collidable.push(block);
 				if (type === 'checkpoint') this.checkpoints.push(block);
-
 				if (type === 'spawn') this.spawners.push(block);
+				if (type === 'finale') this.finale = block;
+				if (type === 'pistol_pickup') this.pistolPickup = block;
 
 				stage.add(...this.blocks.map(({ sprite }) => sprite));
 			} catch (error) {
@@ -211,6 +218,64 @@ export class GameMap implements GameMapObject {
 			}
 		}
 
+		if (
+			!player.pg[1] &&
+			Math.abs(player.position.x - this.pistolPickup.x * 100) < 200 &&
+			Math.abs(player.position.y - this.pistolPickup.y * 100) < 200
+		) {
+			const p = this.pistolPickup;
+
+			const collision = rectangleCollision(
+				{
+					position: player.position,
+					tpos: player.position.clone().subtract(player.sprite.halfSize),
+					halfSize: player.sprite.halfSize,
+					velocity: player.velocity,
+				},
+				{
+					position: p.sprite.position,
+					tpos: p.sprite.position.clone().subtract(p.sprite.halfSize),
+					halfSize: p.sprite.halfSize,
+					velocity: new Vec2(0, 0),
+				},
+				true,
+				false
+			);
+
+			if (collision) {
+				player.pickupWeapon(new Pistol(player, player.character.arm, this.assets));
+				p.sprite.material.goto(1);
+			}
+		}
+
+		if (
+			Math.abs(player.position.x - this.finale.x * 100) < 200 &&
+			Math.abs(player.position.y - this.finale.y * 100) < 200
+		) {
+			const f = this.finale;
+
+			const collision = rectangleCollision(
+				{
+					position: player.position,
+					tpos: player.position.clone().subtract(player.sprite.halfSize),
+					halfSize: player.sprite.halfSize,
+					velocity: player.velocity,
+				},
+				{
+					position: f.sprite.position,
+					tpos: f.sprite.position.clone().subtract(f.sprite.halfSize),
+					halfSize: f.sprite.halfSize,
+					velocity: new Vec2(0, 0),
+				},
+				true,
+				false
+			);
+
+			if (collision) {
+				this.win = true;
+			}
+		}
+
 		if (this.enemies.length > 0) {
 			for (let e1 of this.enemies) {
 				for (let e2 of this.enemies) {
@@ -325,6 +390,11 @@ export class GameMap implements GameMapObject {
 			this.stage.remove(s.sprite);
 			this.spawners.splice(this.spawners.indexOf(s), 1);
 		}
+	}
+
+	kill() {
+		this.update = () => {};
+		this.checkCollisions = () => {};
 	}
 
 	getSpawnCoords(): Block {

@@ -1,38 +1,46 @@
 <script lang="ts">
-	import type { Pistol } from '@classes/weapons';
+	import type { Breadcrumb, Pistol, SMG, Sniper } from '@classes/weapons';
+	import imgSRC from '@assets/revolver_silhouette.png';
 
 	export let pistol: Pistol;
-	export let index: number;
 </script>
 
-<article>
-	<div class="top">
-		<img src="" alt="" />
-		<div class="bar-outer">
-			<div class="bar-inner" />
-		</div>
-	</div>
-	<div class="label">{pistol.name}</div>
-</article>
+{#if pistol}
+	<article>
+		<img src={imgSRC} alt="Pistol" />
+		<div class="num">2</div>
+	</article>
+{:else}
+	<article />
+{/if}
 
 <style lang="scss">
 	article {
 		display: flex;
 
-		width: 90%;
-		height: 90%;
+		width: 5vw;
+		height: 5vw;
 
 		flex-direction: column;
 		align-items: center;
+		justify-content: center;
+		background: #9988;
 
-		.top {
-			img {
-				width: 90%;
-				height: 90%;
-			}
+		border-radius: 2vh;
+
+		img {
+			width: 60%;
+			height: auto;
 		}
 
-		.label {
+		.num {
+			width: 80%;
+			height: 10%;
+
+			color: palegoldenrod;
+			font-size: 2vh;
+			font-family: trispace;
+			text-align: right;
 		}
 	}
 </style>
