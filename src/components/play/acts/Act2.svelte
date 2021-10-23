@@ -39,6 +39,10 @@
 		});
 	};
 
+	let stopwatch = writable(0);
+	let sInterval: NodeJS.Timeout;
+	let swStr = '00:00';
+
 	const start = () => {
 		assets.sounds.find((a) => a.name === 'titlebg').audio.pause();
 		$settings.inAct = true;
@@ -67,6 +71,7 @@
 				// setTimeout(() => {
 				stop();
 				$lose = true;
+				clearInterval(sInterval);
 				// }, 500);
 			}
 		});
@@ -74,6 +79,30 @@
 		pGearUnsub = uiData.pGear.subscribe((g) => {
 			pGear = g;
 		});
+
+		sInterval = setInterval(() => {
+			$stopwatch++;
+
+			let min = Math.floor($stopwatch / 60);
+			let sec = Math.floor($stopwatch % 60);
+
+			let m1 = '';
+			let s1 = '';
+
+			if (min.toString().length >= 2) {
+				m1 = min.toString();
+			} else {
+				m1 = `0${min}`;
+			}
+
+			if (sec.toString().length > 1) {
+				s1 = sec.toString();
+			} else {
+				s1 = `0${sec}`;
+			}
+
+			swStr = `${m1}:${s1}`;
+		}, 1000);
 	};
 
 	const restart = () => {
@@ -105,9 +134,19 @@
 	/>
 
 	<div
+		class="top"
+		in:fly={{ easing: backOut, delay: 1000, duration: 500, y: -300 }}
+		out:fly={{ easing: backIn, delay: 50, duration: 450, y: -300 }}
+	>
+		<div class="stopwatch">
+			{swStr}
+		</div>
+	</div>
+
+	<div
 		class="bottom"
-		in:fly={{ easing: backOut, delay: 1000, duration: 500, y: 300 }}
-		out:fly={{ easing: backIn, delay: 50, duration: 450, y: 300 }}
+		in:fly={{ easing: backOut, delay: 1000, duration: 500, x: -300 }}
+		out:fly={{ easing: backIn, delay: 50, duration: 450, x: -300 }}
 	>
 		<div class="pHealth"><strong>+</strong>{pHealth}</div>
 		<div class="pGear">
@@ -127,7 +166,14 @@
 		class="lose"
 	>
 		<h1>YOU DIED!</h1>
-
+		<h3>
+			After {Math.floor($stopwatch / 60) === 0 ? 'no' : Math.floor($stopwatch / 60)} minute{Math.floor(
+				$stopwatch / 60
+			) === 1
+				? ''
+				: 's'}
+			and {Math.floor($stopwatch % 60)} second{Math.floor($stopwatch % 60) === 1 ? '' : 's'}
+		</h3>
 		<div class="button" on:click={() => click('title')}>Main Menu</div>
 	</main>
 {/if}
@@ -179,7 +225,15 @@
 
 			text-shadow: 0 0 2vh crimson;
 
-			margin: 0 0 20vh;
+			margin: 0 0 4vh;
+		}
+
+		h3 {
+			color: palegoldenrod;
+			font-size: 2vw;
+			font-family: trispace;
+
+			margin: 2vh 0 10vh;
 		}
 
 		.button {
@@ -211,6 +265,34 @@
 			@include Button;
 
 			margin: 1vh;
+		}
+	}
+
+	.top {
+		position: absolute;
+		display: flex;
+
+		top: 0;
+		left: 0;
+		width: 100vw;
+		height: 10vh;
+
+		justify-content: center;
+		align-items: center;
+
+		.stopwatch {
+			width: 6vw;
+
+			background: #00000080;
+			border-radius: 2vh;
+			box-shadow: 0 0 1.1vh #ffffff70;
+
+			color: palegoldenrod;
+			font-family: trispace;
+			font-size: 1.5vw;
+
+			text-align: center;
+			padding: 1vh;
 		}
 	}
 

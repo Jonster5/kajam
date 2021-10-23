@@ -59,7 +59,7 @@
 		align-items: left;
 		justify-content: space-between;
 		background: radial-gradient(#00000080, #000000ff),
-			url('images/title_bg.png') no-repeat center center fixed;
+			url('/images/title_bg.png') no-repeat center center fixed;
 		background-size: cover;
 	}
 
