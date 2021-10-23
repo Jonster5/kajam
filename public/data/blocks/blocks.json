@@ -20,6 +20,14 @@
 		"image": ["tutorial_wall_side.png"]
 	},
 	{
+		"type": "dirt_wall",
+		"image": ["dirt_wall.png"]
+	},
+	{
+		"type": "dirt_wall_side",
+		"image": ["dirt_wall_side.png"]
+	},
+	{
 		"type": "finale",
 		"image": ["finale.png"]
 	},
@@ -40,7 +48,7 @@
 		"image": ["pedestal_pistol.png", "pedestal_empty.png"]
 	},
 	{
-		"type": "SMG_pickup",
+		"type": "smg_pickup",
 		"image": ["pedestal_smg.png", "pedestal_empty.png"]
 	}
 ]

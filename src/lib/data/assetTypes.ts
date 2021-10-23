@@ -1,4 +1,6 @@
 import type { Sound } from '@api/audio';
+import type { Texture } from '@api/material';
+import type { Sprite } from '@api/sprite';
 import type { Vec2 } from '@api/vec2';
 
 export const BASE_URL = '/data';
@@ -56,7 +58,7 @@ export interface RawBlockItem {
 
 export interface ParsedBlockItem {
 	type: string;
-	image: HTMLImageElement[];
+	material: Texture;
 }
 
 export interface RawActItem {
@@ -103,6 +105,7 @@ export interface ParsedGridItem {
 	x: number;
 	y: number;
 	solid: boolean;
+	sprite: Sprite<Texture>;
 
 	data?: {
 		[key: string]: any;

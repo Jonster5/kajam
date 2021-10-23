@@ -15,6 +15,11 @@
 		"effect": false
 	},
 	{
+		"name": "maze1bg",
+		"source": "jonster5 - Into the Deep.mp3",
+		"effect": false
+	},
+	{
 		"name": "click",
 		"source": "click.wav",
 		"effect": true

@@ -85,17 +85,6 @@ export class Player {
 
 		this.stepInterval = null;
 
-		// this.pickupWeapon(
-		// 	new SMG(
-		// 		this,
-		// 		[
-		// 			assets.images.find((i) => i.name === 'SMG_right').image,
-		// 			assets.images.find((i) => i.name === 'SMG_left').image,
-		// 		],
-		// 		assets
-		// 	)
-		// );
-
 		this.pickupWeapon(
 			new Breadcrumb(
 				this,
@@ -265,7 +254,6 @@ export class Player {
 	}
 
 	update() {
-		console.log(this.pause);
 		const delta = new Vec2(0, 0);
 
 		if (this.left) delta.x -= (3 * this.speed) / 4;

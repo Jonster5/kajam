@@ -2,9 +2,10 @@ import { rectangleCollision } from '@api/collisions';
 import { Pattern, Rectangle, Stage, Texture } from '@api/material';
 import { Sprite } from '@api/sprite';
 import { Vec2 } from '@api/vec2';
+import type { GinormousGerry, JumboJaret, MegaMeqwid } from '@classes/boss';
 import { Enemy } from '@classes/enemy';
 import type { Player } from '@classes/player';
-import { Pistol } from '@classes/weapons';
+import { Pistol, SMG } from '@classes/weapons';
 import type { ParsedActItem, ParsedAssets } from '@data/assetTypes';
 import type { Block, Settings } from '@data/types';
 import type { GameMapObject } from '@utils/mapUtils';
@@ -26,7 +27,12 @@ export class GameMap implements GameMapObject {
 	checkpoints: Block[];
 	spawners: Block[];
 	pistolPickup: Block;
+	smgPickup: Block;
 	finale: Block;
+
+	jj: JumboJaret;
+	gg: GinormousGerry;
+	mm: MegaMeqwid;
 
 	win: boolean;
 
@@ -67,16 +73,12 @@ export class GameMap implements GameMapObject {
 
 	setupMap(stage: Sprite) {
 		this.act.grid.forEach((g) => {
-			const { type, x, y, solid, data } = g;
+			const { type, x, y, solid, data, sprite } = g;
 
 			try {
-				const img = this.assets.blocks.find((b) => b.type === type).image;
+				const img = this.assets.blocks.find((b) => b.type === type).material;
 
-				const sprite = new Sprite(
-					new Texture({ frames: img, alpha: type === 'door' ? 0 : 1 }),
-					new Vec2(100, 100),
-					new Vec2(x * 100, y * 100)
-				);
+				sprite.material = img;
 
 				const block = {
 					type,
@@ -93,13 +95,14 @@ export class GameMap implements GameMapObject {
 				if (type === 'spawn') this.spawners.push(block);
 				if (type === 'finale') this.finale = block;
 				if (type === 'pistol_pickup') this.pistolPickup = block;
-
-				stage.add(...this.blocks.map(({ sprite }) => sprite));
+				if (type === 'smg_pickup') this.smgPickup = block;
 			} catch (error) {
 				console.log(g);
 				console.error(error);
 			}
 		});
+
+		stage.add(...this.blocks.map(({ sprite }) => sprite));
 	}
 
 	update(player: Player) {
@@ -219,6 +222,7 @@ export class GameMap implements GameMapObject {
 		}
 
 		if (
+			this.pistolPickup &&
 			!player.pg[1] &&
 			Math.abs(player.position.x - this.pistolPickup.x * 100) < 200 &&
 			Math.abs(player.position.y - this.pistolPickup.y * 100) < 200
@@ -245,6 +249,46 @@ export class GameMap implements GameMapObject {
 			if (collision) {
 				player.pickupWeapon(new Pistol(player, player.character.arm, this.assets));
 				p.sprite.material.goto(1);
+			}
+		}
+
+		if (
+			this.smgPickup &&
+			!player.pg[2] &&
+			Math.abs(player.position.x - this.smgPickup.x * 100) < 200 &&
+			Math.abs(player.position.y - this.smgPickup.y * 100) < 200
+		) {
+			const s = this.smgPickup;
+
+			const collision = rectangleCollision(
+				{
+					position: player.position,
+					tpos: player.position.clone().subtract(player.sprite.halfSize),
+					halfSize: player.sprite.halfSize,
+					velocity: player.velocity,
+				},
+				{
+					position: s.sprite.position,
+					tpos: s.sprite.position.clone().subtract(s.sprite.halfSize),
+					halfSize: s.sprite.halfSize,
+					velocity: new Vec2(0, 0),
+				},
+				true,
+				false
+			);
+
+			if (collision) {
+				player.pickupWeapon(
+					new SMG(
+						player,
+						[
+							this.assets.images.find((i) => i.name === 'SMG_right').image,
+							this.assets.images.find((i) => i.name === 'SMG_left').image,
+						],
+						this.assets
+					)
+				);
+				s.sprite.material.goto(1);
 			}
 		}
 

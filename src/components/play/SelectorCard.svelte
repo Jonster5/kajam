@@ -4,23 +4,14 @@
 	import { quintOut } from 'svelte/easing';
 
 	export let act: ParsedActItem;
-
-	let showDesc = false;
 </script>
 
 <main in:fade={{ easing: quintOut }}>
 	<h2>{act.title}</h2>
-	<div
-		style={`background: url(${act.coverImage.src})`}
-		on:mouseenter={() => (showDesc = true)}
-		on:mouseleave={() => (showDesc = false)}
-	>
-		{#if showDesc}
-			<article transition:fade={{ duration: 100 }}>
-				{act.description}
-			</article>
-		{/if}
-	</div>
+	<img src={act.coverImage.src} alt={act.title} />
+	<article>
+		{act.description}
+	</article>
 </main>
 
 <style lang="scss">
@@ -41,24 +32,27 @@
 			width: 100%;
 			text-align: center;
 			color: $title;
+
+			flex-grow: 2;
 		}
 
-		div {
-			height: 100%;
-			aspect-ratio: 16 / 9;
+		img {
+			width: 60%;
+			height: auto;
 			border-radius: 2vh;
-			box-sizing: border-box;
-			box-shadow: 0 0 2vh #ffffff70;
-			background-size: contain;
+			margin: 1vh;
+			box-shadow: 0 0 1.5vh #ffffff70;
+		}
 
-			article {
-				font-family: trispace;
-				background: #000000aa;
-				border-radius: 2vh;
-				width: 100%;
-				padding: 1vh;
-				box-sizing: border-box;
-			}
+		article {
+			font-family: trispace;
+			background: #000000aa;
+			border-radius: 2vh;
+			width: 60%;
+			padding: 1vh;
+			margin: 2vh;
+			box-sizing: border-box;
+			text-align: center;
 		}
 	}
 </style>

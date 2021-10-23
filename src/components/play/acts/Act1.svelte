@@ -3,7 +3,7 @@
 	import { createEventDispatcher, onDestroy, onMount } from 'svelte';
 	import { settings } from '@api/settings';
 	import { fly } from 'svelte/transition';
-	import { cubicIn, cubicOut, quintIn, quintOut } from 'svelte/easing';
+	import { backIn, backOut, cubicIn, cubicOut, quintIn, quintOut } from 'svelte/easing';
 	import { writable } from 'svelte/store';
 	import type { Writable } from 'svelte/store';
 	import { Act1Game } from '@classes/act1';
@@ -46,7 +46,9 @@
 		game = new Act1Game(target, assets);
 		game.spawnPlayer(assets.characters.find((c) => c.name === 'Player'));
 
-		ctext = game.showText;
+		setTimeout(() => {
+			ctext = game.showText;
+		}, 1200);
 
 		win = game.win;
 
@@ -97,12 +99,16 @@
 
 {#if !$lose && !$win}
 	<main
-		in:fly={{ easing: cubicOut, delay: 500, duration: 500, y: -300 }}
+		in:fly={{ easing: cubicOut, delay: 600, duration: 500, y: -300 }}
 		out:fly={{ easing: cubicIn, delay: 50, duration: 450, y: -300 }}
 		bind:this={target}
 	/>
 
-	<div class="bottom">
+	<div
+		class="bottom"
+		in:fly={{ easing: backOut, delay: 1000, duration: 500, x: -300 }}
+		out:fly={{ easing: backIn, delay: 50, duration: 450, x: -300 }}
+	>
 		<div class="pHealth"><strong>+</strong>{pHealth}</div>
 		<div class="pGear">
 			<BreadcrumbGearItem crumb={pGear[0]} />

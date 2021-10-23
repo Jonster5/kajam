@@ -1,4 +1,6 @@
 import { actx, Sound } from '@api/audio';
+import { Texture } from '@api/material';
+import { Sprite } from '@api/sprite';
 import { Vec2 } from '@api/vec2';
 import {
 	ACT_URL,
@@ -112,9 +114,11 @@ export async function LoadBlock(input: RawBlockItem): Promise<ParsedBlockItem> {
 
 	return {
 		type,
-		image: await Promise.all(
-			image.map((i) => LoadImage(`${BASE_URL}${BLOCK_URL}/images/${i}`))
-		),
+		material: new Texture({
+			frames: await Promise.all(
+				image.map((i) => LoadImage(`${BASE_URL}${BLOCK_URL}/images/${i}`))
+			),
+		}),
 	};
 }
 
@@ -146,6 +150,7 @@ export async function LoadGrid(input: RawGridItem[]): Promise<ParsedGridItem[]> 
 			x,
 			y,
 			solid,
+			sprite: new Sprite(null, new Vec2(100, 100), new Vec2(x * 100, y * 100)),
 			data,
 		};
 	});

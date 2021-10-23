@@ -36,7 +36,7 @@
 	out:fly={{ easing: cubicIn, delay: 50, duration: 450, y: -300 }}
 >
 	<div class="title">
-		<span class="one">Money, Mazes, and </span><span class="two">Monsters</span>
+		<span class="one">Mazes, Money, and </span><span class="two">Monsters</span>
 	</div>
 
 	<div>

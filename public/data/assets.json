@@ -1,6 +1,6 @@
 {
 	"acts": ["act1.json", "act2.json"],
-	"characters": ["player.json", "weak.json"],
+	"characters": ["player.json", "weak.json", "mid.json"],
 
 	"blocks": "blocks.json",
 	"images": "sprites.json",

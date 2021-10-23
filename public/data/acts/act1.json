@@ -1,13 +1,13 @@
 {
 	"title": "Tutorial",
-	"description": "The perfect guide for an aspiring mercenary who is desperate need of cash, and is willing to dive into a huge maze and fight deadly foes to get it.",
+	"description": "The perfect guide to an aspiring mercenary.",
 	"background": "tutorial_floor.png",
 	"order": 1,
 
 	"width": 192,
 	"height": 108,
 
-	"cover_image": "bg.png",
+	"cover_image": "tutorial_image.png",
 
 	"grid": [
 		{ "type": "tutorial_wall", "x": -3, "y": 3, "solid": true },
