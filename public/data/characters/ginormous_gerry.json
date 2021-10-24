@@ -1,0 +1,15 @@
+{
+	"name": "ginormous gerry",
+
+	"right": ["gg_1.png", "gg_2.png"],
+	"left": ["gg_1.png", "gg_2.png"],
+	"arm_right": "gg_right_fist.png",
+	"arm_left": "gg_left_fist.png",
+
+	"width": 200,
+	"height": 200,
+
+	"health": 1000,
+	"damage": 2,
+	"speed": 8
+}

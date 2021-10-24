@@ -1,0 +1,15 @@
+{
+	"name": "jumbo jaret",
+
+	"right": ["jj_right.png", "jj_right_2.png", "jj_right_3.png", "jj_right_4.png"],
+	"left": ["jj_left.png", "jj_left_2.png", "jj_left_3.png", "jj_left_4.png"],
+	"arm_right": "player_arm_right.png",
+	"arm_left": "player_arm_left.png",
+
+	"width": 180,
+	"height": 60,
+
+	"health": 400,
+	"damage": 2,
+	"speed": 9.8
+}

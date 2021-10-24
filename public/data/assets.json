@@ -1,6 +1,14 @@
 {
-	"acts": ["act1.json", "act2.json"],
-	"characters": ["player.json", "weak.json", "mid.json"],
+	"acts": ["act1.json", "act2.json", "act3.json", "act4.json"],
+	"characters": [
+		"player.json",
+		"weak.json",
+		"mid.json",
+		"strong.json",
+		"jumbo_jaret.json",
+		"ginormous_gerry.json",
+		"mega_meqwid.json"
+	],
 
 	"blocks": "blocks.json",
 	"images": "sprites.json",

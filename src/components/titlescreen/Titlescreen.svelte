@@ -40,7 +40,8 @@
 	</div>
 
 	<div>
-		<div class="button" on:click={() => click('game options')}>Start</div>
+		<div class="button" on:click={() => click('act 1')}>Start</div>
+		<div class="button" on:click={() => click('game options')}>Level Select</div>
 		<div class="button" on:click={() => click('showSettings')}>Settings</div>
 	</div>
 </main>
@@ -59,7 +60,7 @@
 		align-items: left;
 		justify-content: space-between;
 		background: radial-gradient(#00000080, #000000ff),
-			url('/images/title_bg.png') no-repeat center center fixed;
+			url('/images/title_bg.gif') no-repeat center center fixed;
 		background-size: cover;
 	}
 

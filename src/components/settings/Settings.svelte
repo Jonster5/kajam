@@ -15,6 +15,7 @@
 
 	let music = $settings.music * 100;
 	let sfx = $settings.sfx * 100;
+	let kbm = $settings.keyboardMode;
 
 	const adjustMusic = () => {
 		$settings.music = music / 100;
@@ -30,6 +31,10 @@
 		assets.sounds
 			.filter((s) => s.effect === true)
 			.forEach((e) => (e.audio.volume = $settings.sfx));
+	};
+
+	const adjustKBM = () => {
+		$settings.keyboardMode = kbm;
 	};
 
 	const click = (screen: string) => {
@@ -58,6 +63,10 @@
 			<div class="slider">
 				<span>SFX</span>
 				<input type="range" min="0" max="100" bind:value={sfx} on:change={adjustSFX} />
+			</div>
+			<div class="slider">
+				<span>Keyboard-Only Mode</span>
+				<input type="checkbox" bind:checked={kbm} on:change={adjustKBM} />
 			</div>
 		</div>
 		{#if inAct}
@@ -92,7 +101,8 @@
 		position: absolute;
 
 		width: 30vw;
-		height: 20vh;
+		// height: 20vh;
+		padding: 0.5vh 0 2vh 0;
 
 		top: 50%;
 		left: 50%;

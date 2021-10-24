@@ -1,13 +1,13 @@
 {
-	"title": "Level One",
-	"description": "This is the first maze",
+	"title": "Dirt Maze",
+	"description": "This maze is not very deep underground and the enemies aren't too strong.",
 	"background": "dirt_floor.png",
 	"order": 2,
 
 	"width": 176,
 	"height": 176,
 
-	"cover_image": "bg.png",
+	"cover_image": "dirt_maze_image.png",
 
 	"grid": [
 		{ "type": "dirt_wall", "x": 9, "y": -7, "solid": true },
@@ -143,7 +143,7 @@
 			"y": 80,
 			"solid": false,
 			"data": {
-				"text": "checkpoint in beginning"
+				"text": "Good! You have arrived at the maze my young mercenary. You must fight your way to the center of it now to kill your target. However I have heard legends of a much more powerful weapon hidden somewhere in the maze to aid in your conquest..."
 			}
 		},
 		{ "type": "dirt_wall", "x": 40, "y": 77, "solid": true },
@@ -598,7 +598,7 @@
 			"y": 0,
 			"solid": false,
 			"data": {
-				"text": "checkpoint before boss"
+				"text": "Absolutely splendid! Now that you've made your way here, I should tell you who your target is. Jumbo Jaret, the jumbo sized rat, lives in the den up ahead. Whether you've found and acquired the SMG or not, this fight should prove to be not too difficult for you."
 			}
 		},
 		{ "type": "dirt_wall", "x": 38, "y": 60, "solid": true },
@@ -4599,8 +4599,8 @@
 			"y": -12,
 			"solid": false,
 			"data": {
-				"enemyCount": 3,
-				"enemyStrength": "weak"
+				"enemyCount": 2,
+				"enemyStrength": "mid"
 			}
 		},
 		{
@@ -4619,8 +4619,8 @@
 			"y": 33,
 			"solid": false,
 			"data": {
-				"enemyCount": 3,
-				"enemyStrength": "weak"
+				"enemyCount": 2,
+				"enemyStrength": "mid"
 			}
 		},
 		{
@@ -4629,8 +4629,8 @@
 			"y": 30,
 			"solid": false,
 			"data": {
-				"enemyCount": 3,
-				"enemyStrength": "weak"
+				"enemyCount": 2,
+				"enemyStrength": "mid"
 			}
 		},
 		{
@@ -4649,8 +4649,8 @@
 			"y": -17,
 			"solid": false,
 			"data": {
-				"enemyCount": 3,
-				"enemyStrength": "weak"
+				"enemyCount": 2,
+				"enemyStrength": "mid"
 			}
 		},
 		{
@@ -4669,8 +4669,8 @@
 			"y": -12,
 			"solid": false,
 			"data": {
-				"enemyCount": 3,
-				"enemyStrength": "weak"
+				"enemyCount": 2,
+				"enemyStrength": "mid"
 			}
 		},
 		{
@@ -4690,7 +4690,7 @@
 			"solid": false,
 			"data": {
 				"enemyCount": 1,
-				"enemyStrength": "jumbo"
+				"enemyStrength": "jumbo jaret"
 			}
 		},
 		{ "type": "finale", "x": 14, "y": 0, "solid": false },
@@ -4711,7 +4711,7 @@
 			"solid": false,
 			"data": {
 				"enemyCount": 1,
-				"enemyStrength": "weak"
+				"enemyStrength": "mid"
 			}
 		},
 		{
@@ -4731,7 +4731,7 @@
 			"solid": false,
 			"data": {
 				"enemyCount": 1,
-				"enemyStrength": "weak"
+				"enemyStrength": "mid"
 			}
 		},
 		{
@@ -4751,7 +4751,7 @@
 			"solid": false,
 			"data": {
 				"enemyCount": 1,
-				"enemyStrength": "weak"
+				"enemyStrength": "mid"
 			}
 		},
 		{
@@ -4771,7 +4771,7 @@
 			"solid": false,
 			"data": {
 				"enemyCount": 1,
-				"enemyStrength": "weak"
+				"enemyStrength": "mid"
 			}
 		},
 		{
@@ -4791,7 +4791,7 @@
 			"solid": false,
 			"data": {
 				"enemyCount": 1,
-				"enemyStrength": "weak"
+				"enemyStrength": "mid"
 			}
 		},
 		{
@@ -4811,7 +4811,7 @@
 			"solid": false,
 			"data": {
 				"enemyCount": 1,
-				"enemyStrength": "weak"
+				"enemyStrength": "mid"
 			}
 		},
 		{
@@ -4831,7 +4831,7 @@
 			"solid": false,
 			"data": {
 				"enemyCount": 1,
-				"enemyStrength": "weak"
+				"enemyStrength": "mid"
 			}
 		},
 		{
@@ -4851,7 +4851,7 @@
 			"solid": false,
 			"data": {
 				"enemyCount": 1,
-				"enemyStrength": "weak"
+				"enemyStrength": "mid"
 			}
 		},
 		{
@@ -4871,7 +4871,7 @@
 			"solid": false,
 			"data": {
 				"enemyCount": 1,
-				"enemyStrength": "weak"
+				"enemyStrength": "mid"
 			}
 		},
 		{
@@ -4891,7 +4891,7 @@
 			"solid": false,
 			"data": {
 				"enemyCount": 1,
-				"enemyStrength": "weak"
+				"enemyStrength": "mid"
 			}
 		},
 		{
@@ -4911,7 +4911,7 @@
 			"solid": false,
 			"data": {
 				"enemyCount": 1,
-				"enemyStrength": "weak"
+				"enemyStrength": "mid"
 			}
 		},
 		{
@@ -4931,7 +4931,7 @@
 			"solid": false,
 			"data": {
 				"enemyCount": 1,
-				"enemyStrength": "weak"
+				"enemyStrength": "mid"
 			}
 		},
 		{
@@ -4951,7 +4951,7 @@
 			"solid": false,
 			"data": {
 				"enemyCount": 1,
-				"enemyStrength": "weak"
+				"enemyStrength": "mid"
 			}
 		},
 		{
@@ -4971,7 +4971,7 @@
 			"solid": false,
 			"data": {
 				"enemyCount": 1,
-				"enemyStrength": "weak"
+				"enemyStrength": "mid"
 			}
 		},
 		{
@@ -4991,7 +4991,7 @@
 			"solid": false,
 			"data": {
 				"enemyCount": 1,
-				"enemyStrength": "weak"
+				"enemyStrength": "mid"
 			}
 		},
 		{
@@ -5011,7 +5011,7 @@
 			"solid": false,
 			"data": {
 				"enemyCount": 1,
-				"enemyStrength": "weak"
+				"enemyStrength": "mid"
 			}
 		},
 		{

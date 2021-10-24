@@ -1,44 +1,120 @@
 import { Canvas } from '@api/canvas';
-import { Stage } from '@api/material';
+import { Rectangle, Stage } from '@api/material';
 import { Sprite } from '@api/sprite';
 import { Vec2 } from '@api/vec2';
 import { GameMap } from '@classes/map';
-import type { Player } from '@classes/player';
-import type { ParsedActItem, ParsedAssets, ParsedCharacterItem } from '@data/assetTypes';
+import { Player } from '@classes/player';
+import { Pistol } from '@classes/weapons';
+import type {
+	ParsedActItem,
+	ParsedAssets,
+	ParsedAudioItem,
+	ParsedCharacterItem,
+} from '@data/assetTypes';
+import type { UIData } from '@data/types';
 import type { GameProperties } from '@utils/gameUtils';
+import { Writable, writable } from 'svelte/store';
 
 export class Act4Game implements GameProperties {
 	assets: ParsedAssets;
 	act: ParsedActItem;
 
+	music: ParsedAudioItem;
+
 	canvas: Canvas;
 	stage: Sprite<Stage>;
 
 	map: GameMap;
-
 	player: Player;
+
+	showText: Writable<string>;
+
+	win: Writable<boolean>;
 
 	pause: boolean;
 
-	constructor(p: HTMLElement, assets: ParsedAssets, act: ParsedActItem) {
+	constructor(target: HTMLElement, assets: ParsedAssets) {
 		this.assets = assets;
-		this.act = act;
+		this.act = assets.acts.find((a) => a.order === 4);
 
-		this.canvas = new Canvas(p, this.act.width * 20);
-		this.stage = new Sprite(new Stage(), new Vec2(this.act.width * 20, this.act.height * 20));
+		this.music = this.assets.sounds.find((x) => x.name === 'maze3bg')!;
+
+		this.win = writable(false);
+
+		this.canvas = new Canvas(target, window.innerWidth);
+		this.stage = new Sprite(
+			new Stage(),
+			new Vec2(this.act.width, this.act.height).multiply(100)
+		);
+		this.canvas.add(this.stage);
 
 		this.map = new GameMap(this.assets, this.act, this.stage);
 
-		this.canvas.update = () => {};
+		this.pause = false;
+
+		this.showText = writable('');
+
+		this.canvas.update = () => {
+			if (this.pause) {
+				this.player.pause = true;
+
+				this.player.update();
+				return;
+			} else {
+				this.player.pause = false;
+			}
+			if (this.map.win) this.win.set(true);
+
+			this.player.update();
+			this.map.update(this.player);
+
+			this.map.checkCollisions(this.player, this.showText);
+
+			this.stage.position.set(this.player.position.clone().negate());
+		};
 
 		this.canvas.start();
+
+		this.music.audio.loop = true;
+		setTimeout(() => {
+			this.music.audio.restart();
+		}, 500);
+
+		window.addEventListener('keydown', (e) => {
+			if (e.key === 'Escape') this.pause = !this.pause;
+		});
 	}
 
 	spawnPlayer(u: ParsedCharacterItem): void {
-		throw new Error('Method not implemented.');
+		this.player = new Player(
+			this.canvas.element,
+			this.assets,
+			u,
+			this.stage,
+			this.map.getSpawnCoords()
+		);
+		this.player.pickupWeapon(new Pistol(this.player, this.player.character.arm, this.assets));
+	}
+
+	UIData(): UIData {
+		return {
+			pHealth: this.player.health,
+			pGear: this.player.gear,
+			cWeapon: this.player.currentWeapon,
+		};
 	}
 
 	kill(): void {
-		throw new Error('Method not implemented.');
+		try {
+			this.canvas.stop();
+			this.music.audio.pause();
+			this.assets.sounds.filter((s) => s.effect).forEach((e) => e.audio.pause);
+
+			this.player.kill();
+			this.map.kill();
+
+			this.map = undefined;
+			this.player = undefined;
+		} catch {}
 	}
 }

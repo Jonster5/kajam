@@ -15,9 +15,29 @@
 		"effect": false
 	},
 	{
+		"name": "playerHit",
+		"source": "player_hit.wav",
+		"effect": true
+	},
+	{
 		"name": "maze1bg",
 		"source": "jonster5 - Into the Deep.mp3",
 		"effect": false
+	},
+	{
+		"name": "maze2bg",
+		"source": "jonster5 - Descent into Madness.mp3",
+		"effect": false
+	},
+	{
+		"name": "maze3bg",
+		"source": "jonster5 - The Final Foe.mp3",
+		"effect": false
+	},
+	{
+		"name": "scratch",
+		"source": "scratch.wav",
+		"effect": true
 	},
 	{
 		"name": "click",
@@ -32,6 +52,16 @@
 	{
 		"name": "step",
 		"source": "step.wav",
+		"effect": true
+	},
+	{
+		"name": "breathing",
+		"source": "breathing.wav",
+		"effect": true
+	},
+	{
+		"name": "spud shot",
+		"source": "spud_shot.wav",
 		"effect": true
 	}
 ]

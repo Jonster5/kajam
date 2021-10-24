@@ -31,9 +31,13 @@
 	let pGearUnsub: () => void;
 	let pGear: (Pistol | SMG | Sniper | Breadcrumb)[] = [];
 
+	let cWepUnsub: () => void;
+	let cWep: string = 'Breadcrumb';
+
 	let target: HTMLElement;
 
 	const click = (screen: string) => {
+		assets.sounds.find((a) => a.name === 'click').audio.restart();
 		dispatch('click', {
 			screen,
 		});
@@ -74,6 +78,10 @@
 		pGearUnsub = uiData.pGear.subscribe((g) => {
 			pGear = g;
 		});
+
+		cWepUnsub = uiData.cWeapon.subscribe((w) => {
+			cWep = w;
+		});
 	};
 
 	const restart = () => {
@@ -83,14 +91,19 @@
 		$win = false;
 		pHealth = '100';
 
-		start();
+		setTimeout(start, 500);
 	};
 
 	const stop = () => {
 		try {
 			game.kill();
 			pHealthUnsub();
+			pGearUnsub();
+			cWepUnsub();
 		} catch {}
+
+		game = undefined;
+		target.innerHTML = '';
 	};
 
 	onMount(start);
@@ -111,10 +124,10 @@
 	>
 		<div class="pHealth"><strong>+</strong>{pHealth}</div>
 		<div class="pGear">
-			<BreadcrumbGearItem crumb={pGear[0]} />
+			<BreadcrumbGearItem cWeapon={cWep} crumb={pGear[0]} />
 
-			<PistolGearItem pistol={pGear[1]} />
-			<SmgGearItem SMG={pGear[2]} />
+			<PistolGearItem cWeapon={cWep} pistol={pGear[1]} />
+			<SmgGearItem cWeapon={cWep} SMG={pGear[2]} />
 			<!-- <SniperGearItem />  -->
 		</div>
 	</div>
@@ -128,6 +141,7 @@
 	>
 		<h1>YOU DIED!</h1>
 
+		<div class="button" on:click={() => restart()}>Restart Level</div>
 		<div class="button" on:click={() => click('title')}>Main Menu</div>
 	</main>
 {/if}

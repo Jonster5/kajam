@@ -28,6 +28,22 @@
 		"image": ["dirt_wall_side.png"]
 	},
 	{
+		"type": "stone_wall",
+		"image": ["stone_wall.png"]
+	},
+	{
+		"type": "stone_wall_side",
+		"image": ["stone_wall_side.png"]
+	},
+	{
+		"type": "magma_wall",
+		"image": ["magma_wall.png"]
+	},
+	{
+		"type": "magma_wall_side",
+		"image": ["magma_wall_side.png"]
+	},
+	{
 		"type": "finale",
 		"image": ["finale.png"]
 	},

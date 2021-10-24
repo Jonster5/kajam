@@ -100,17 +100,21 @@ export class Act2Game implements GameProperties {
 		return {
 			pHealth: this.player.health,
 			pGear: this.player.gear,
+			cWeapon: this.player.currentWeapon,
 		};
 	}
 
 	kill(): void {
-		this.canvas.stop();
-		this.assets.sounds.forEach((s) => s.audio.pause());
+		try {
+			this.canvas.stop();
+			this.music.audio.pause();
+			this.assets.sounds.filter((s) => s.effect).forEach((e) => e.audio.pause);
 
-		this.player.kill();
-		this.map.kill();
+			this.player.kill();
+			this.map.kill();
 
-		this.map = undefined;
-		this.player = undefined;
+			this.map = undefined;
+			this.player = undefined;
+		} catch {}
 	}
 }

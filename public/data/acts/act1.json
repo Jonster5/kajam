@@ -1,6 +1,6 @@
 {
 	"title": "Tutorial",
-	"description": "The perfect guide to an aspiring mercenary.",
+	"description": "The perfect guide to an aspiring mercenary, looking for a quick cash grab.",
 	"background": "tutorial_floor.png",
 	"order": 1,
 
@@ -49,7 +49,7 @@
 			"y": 0,
 			"solid": false,
 			"data": {
-				"text": "Welcome my dear mercenary! It is I Mr. Deshapanesha, your local billionare, and before you dive into your assignment, I would like to offer you some assistance. You are going to be exploring a few huge labyrinths to find and kill the targets I've laid out for you. So I've prepared some things to boost your chances of success!.<br><br><br>Use WASD to move."
+				"text": "Welcome my dear mercenary! It is I, Mr. Deshapanesha, your local billionare, and before you dive into your assignment, I would like to offer you some assistance. You are going to be exploring a few huge labyrinths to find and kill the targets I've laid out for you. So I've prepared some things to boost your chances of success!.<br><br><br>Use WASD to move."
 			}
 		},
 		{ "type": "tutorial_wall", "x": 10, "y": 2, "solid": true },
@@ -84,7 +84,7 @@
 			"y": 0,
 			"solid": false,
 			"data": {
-				"text": "You will notice that you are holding a bag of crumbs, bread crumbs, to be specific. You will be able to lay down these crumbs whilst exploring the massive mazes in order to mark where've you been before.<br><br><br>Move your mouse to change the direction you're pointing in and left click to use your selected item (Bread crumbs)."
+				"text": "You will notice that you are holding a bag of crumbs, bread crumbs, to be specific. You will be able to lay down these crumbs whilst exploring the massive mazes in order to mark where've you been before.<br><br><br>Move your mouse (Or use the arrow keys if in keyboard-only mode) to change the direction you're pointing in and left click (or press the space bar if in keyboard-only mode) to use your selected item (Bread crumbs)."
 			}
 		},
 		{ "type": "tutorial_wall", "x": 24, "y": 2, "solid": true },

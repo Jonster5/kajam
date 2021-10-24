@@ -16,6 +16,7 @@ export class Enemy {
 
 	healthbar: Sprite<Rectangle>;
 
+	maxHealth: number;
 	health: number;
 	speed: number;
 	damage: number;
@@ -33,12 +34,13 @@ export class Enemy {
 
 		this.damage = character.damage;
 		this.health = character.health;
+		this.maxHealth = character.health;
 		this.speed = character.speed;
 
 		this.healthbar = new Sprite(
 			new Rectangle({ texture: 'red' }),
-			new Vec2(character.health, 5),
-			new Vec2(0, 30)
+			new Vec2((character.health / this.maxHealth) * 100, 5),
+			new Vec2(0, this.sprite.halfSize.y + 10)
 		);
 
 		this.sprite.add(this.healthbar);
@@ -48,7 +50,8 @@ export class Enemy {
 
 	takeDamage(amount: number, enemies: Enemy[], player: Player) {
 		this.health -= amount;
-		this.sprite.children[0]!.size.x = this.health < 0 ? 0 : this.health;
+		this.sprite.children[0]!.size.x =
+			this.health < 0 ? 0 : (this.health / this.maxHealth) * 100;
 
 		this.sprite.material.filter = 'brightness(3)';
 		setTimeout(() => {

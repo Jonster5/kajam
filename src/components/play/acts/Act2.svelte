@@ -31,9 +31,14 @@
 	let pGearUnsub: () => void;
 	let pGear: (Pistol | SMG | Sniper | Breadcrumb)[] = [];
 
+	let cWepUnsub: () => void;
+	let cWep: string;
+
 	let target: HTMLElement;
 
 	const click = (screen: string) => {
+		assets.sounds.find((a) => a.name === 'click').audio.restart();
+
 		dispatch('click', {
 			screen,
 		});
@@ -42,6 +47,16 @@
 	let stopwatch = writable(0);
 	let sInterval: NodeJS.Timeout;
 	let swStr = '00:00';
+
+	$: if ($win) {
+		clearInterval(sInterval);
+		game.kill();
+	}
+
+	$: if ($lose) {
+		clearInterval(sInterval);
+		game.kill();
+	}
 
 	const start = () => {
 		assets.sounds.find((a) => a.name === 'titlebg').audio.pause();
@@ -103,6 +118,10 @@
 
 			swStr = `${m1}:${s1}`;
 		}, 1000);
+
+		cWepUnsub = uiData.cWeapon.subscribe((w) => {
+			cWep = w;
+		});
 	};
 
 	const restart = () => {
@@ -112,7 +131,9 @@
 		$win = false;
 		pHealth = '100';
 
-		start();
+		game = undefined;
+
+		setTimeout(start, 500);
 	};
 
 	const stop = () => {
@@ -150,11 +171,9 @@
 	>
 		<div class="pHealth"><strong>+</strong>{pHealth}</div>
 		<div class="pGear">
-			<BreadcrumbGearItem crumb={pGear[0]} />
-
-			<PistolGearItem pistol={pGear[1]} />
-			<SmgGearItem SMG={pGear[2]} />
-			<!-- <SniperGearItem />  -->
+			<BreadcrumbGearItem cWeapon={cWep} crumb={pGear[0]} />
+			<PistolGearItem cWeapon={cWep} pistol={pGear[1]} />
+			<SmgGearItem cWeapon={cWep} SMG={pGear[2]} />
 		</div>
 	</div>
 {/if}
@@ -174,6 +193,7 @@
 				: 's'}
 			and {Math.floor($stopwatch % 60)} second{Math.floor($stopwatch % 60) === 1 ? '' : 's'}
 		</h3>
+		<div class="button" on:click={() => restart()}>Restart Level</div>
 		<div class="button" on:click={() => click('title')}>Main Menu</div>
 	</main>
 {/if}
@@ -185,7 +205,15 @@
 		class="win"
 	>
 		<h1>YOU HAVE SUCCEEDED!</h1>
-		<div class="button" on:click={() => click('act 2')}>Next Level</div>
+		<h3>
+			After {Math.floor($stopwatch / 60) === 0 ? 'no' : Math.floor($stopwatch / 60)} minute{Math.floor(
+				$stopwatch / 60
+			) === 1
+				? ''
+				: 's'}
+			and {Math.floor($stopwatch % 60)} second{Math.floor($stopwatch % 60) === 1 ? '' : 's'}
+		</h3>
+		<div class="button" on:click={() => click('act 3')}>Next Level</div>
 		<div class="button" on:click={() => click('title')}>Main Menu</div>
 	</main>
 {/if}
@@ -258,7 +286,15 @@
 
 			text-shadow: 0 0 2vh lime;
 
-			margin: 0 0 20vh;
+			margin: 0 0 4vh;
+		}
+
+		h3 {
+			color: palegoldenrod;
+			font-size: 2vw;
+			font-family: trispace;
+
+			margin: 2vh 0 10vh;
 		}
 
 		.button {

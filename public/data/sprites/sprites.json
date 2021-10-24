@@ -34,5 +34,9 @@
 	{
 		"name": "SMG_left",
 		"image": "arm_smg_right.png"
+	},
+	{
+		"name": "potato",
+		"image": "mm_shot.png"
 	}
 ]

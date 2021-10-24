@@ -69,7 +69,7 @@ export class Breadcrumb implements WeaponProperties {
 
 		setTimeout(() => {
 			this.canFire = true;
-		}, 500);
+		}, 300);
 	}
 
 	stopFiring() {}

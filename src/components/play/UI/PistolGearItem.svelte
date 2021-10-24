@@ -1,17 +1,26 @@
 <script lang="ts">
 	import type { Breadcrumb, Pistol, SMG, Sniper } from '@classes/weapons';
 	import imgSRC from '@assets/revolver_silhouette.png';
+	import type { Player } from '@classes/player';
+	import type { Writable } from 'svelte/store';
 
 	export let pistol: Pistol;
+	export let cWeapon: string;
+
+	let bg = 'background: #9988;';
+
+	$: if (cWeapon === 'Pistol') {
+		bg = 'background: #ddd8';
+	} else bg = 'background: #9988;';
 </script>
 
 {#if pistol}
-	<article>
+	<article style={bg}>
 		<img src={imgSRC} alt="Pistol" />
 		<div class="num">2</div>
 	</article>
 {:else}
-	<article />
+	<article style={bg} />
 {/if}
 
 <style lang="scss">
@@ -24,7 +33,6 @@
 		flex-direction: column;
 		align-items: center;
 		justify-content: center;
-		background: #9988;
 
 		border-radius: 2vh;
 

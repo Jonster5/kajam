@@ -1,15 +1,15 @@
 {
 	"name": "mid",
 
-	"right": ["weak_right.png", "weak_right_1.png", "weak_right_2.png", "weak_right_1.png"],
-	"left": ["weak_left.png", "weak_left_1.png", "weak_left_2.png", "weak_left_1.png"],
+	"right": ["mid_right.png", "mid_right_1.png", "mid_right_2.png", "mid_right_1.png"],
+	"left": ["mid_left.png", "mid_left_1.png", "mid_left_2.png", "mid_left_1.png"],
 	"arm_right": "player_arm_right.png",
 	"arm_left": "player_arm_left.png",
 
 	"width": 46,
 	"height": 46,
 
-	"health": 75,
+	"health": 40,
 	"damage": 1,
 	"speed": 7
 }

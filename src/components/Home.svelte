@@ -9,6 +9,9 @@
 	import Selector from '@comp/play/Selector.svelte';
 	import Act1 from '@comp/play/acts/Act1.svelte';
 	import Act2 from '@comp/play/acts/Act2.svelte';
+	import Act3 from '@comp/play/acts/Act3.svelte';
+	import Act4 from '@comp/play/acts/Act4.svelte';
+	import Victory from '@comp/play/acts/Victory.svelte';
 
 	export let assets: ParsedAssets;
 
@@ -22,7 +25,10 @@
 		| 'hideSettings'
 		| 'toggleSettings'
 		| 'act 1'
-		| 'act 2';
+		| 'act 2'
+		| 'act 3'
+		| 'act 4'
+		| 'victory';
 
 	let screen: Screen = 'sound check';
 	let showSettings = false;
@@ -57,6 +63,12 @@
 	<Act1 {assets} on:click={click} />
 {:else if screen === 'act 2'}
 	<Act2 {assets} on:click={click} />
+{:else if screen === 'act 3'}
+	<Act3 {assets} on:click={click} />
+{:else if screen === 'act 4'}
+	<Act4 {assets} on:click={click} />
+{:else if screen === 'victory'}
+	<Victory {assets} on:click={click} />
 {:else}
 	<Titlescreen on:click={click} {assets} />
 {/if}

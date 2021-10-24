@@ -11,11 +11,13 @@ export type Strength = 'weak' | 'mid' | 'strong' | 'boss';
 export interface UIData {
 	pHealth: Writable<number>;
 	pGear: Writable<(Pistol | SMG | Sniper | Breadcrumb)[]>;
+	cWeapon: Writable<string>;
 }
 
 export interface Settings {
 	music: number;
 	sfx: number;
+	keyboardMode: boolean;
 
 	currentAct: number;
 	inAct: boolean;

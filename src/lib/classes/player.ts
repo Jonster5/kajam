@@ -1,9 +1,11 @@
 import { Stage, Texture } from '@api/material';
+import { settings } from '@api/settings';
 import { Sprite } from '@api/sprite';
 import { Vec2 } from '@api/vec2';
 import { Breadcrumb, Pistol, SMG, Sniper } from '@classes/weapons';
+import type Settings__SvelteComponent_ from '@comp/settings/Settings.svelte';
 import type { ParsedAssets, ParsedAudioItem, ParsedCharacterItem } from '@data/assetTypes';
-import type { Block } from '@data/types';
+import type { Block, Settings } from '@data/types';
 import { writable, Writable } from 'svelte/store';
 
 export class Player {
@@ -13,6 +15,7 @@ export class Player {
 	rTexture: Texture;
 	lTexture: Texture;
 	mPos: Vec2;
+	kPos: Vec2;
 
 	currentCheckpoint: Block;
 
@@ -23,9 +26,16 @@ export class Player {
 	up: boolean;
 	down: boolean;
 
+	arrowRight: boolean;
+	arrowLeft: boolean;
+	arrowUp: boolean;
+	arrowDown: boolean;
+
 	speed: number;
 	character: ParsedCharacterItem;
 	health: Writable<number>;
+
+	currentWeapon: Writable<string>;
 
 	canGrunt: boolean;
 
@@ -39,6 +49,11 @@ export class Player {
 	walking: boolean;
 	step: ParsedAudioItem;
 	stepInterval: NodeJS.Timeout;
+
+	shooting: boolean;
+
+	settingsUnsub: () => void;
+	settings: Settings;
 
 	onMouseMove: (e) => void;
 	onMouseDown: (e) => void;
@@ -67,22 +82,32 @@ export class Player {
 
 		this.pause = false;
 
+		this.settingsUnsub = settings.subscribe((s) => (this.settings = s));
+		settings.update((s) => {
+			this.settings = s;
+			return s;
+		});
+
 		this.right = false;
 		this.left = false;
 		this.up = false;
 		this.down = false;
 		this.walking = false;
 
+		this.arrowRight = false;
+
+		this.shooting = false;
+
 		this.canGrunt = true;
 		this.health = writable(character.health);
 		this.gear = writable([undefined, undefined, undefined, undefined]);
 		this.speed = character.speed;
 		this.mPos = new Vec2(0, 0);
+		this.kPos = new Vec2(50, 0);
 
+		this.currentWeapon = writable('Breadcrumb');
 		this.uGear = this.gear.subscribe((g) => (this.pg = g));
-
 		this.step = assets.sounds.find((s) => s.name === 'step');
-
 		this.stepInterval = null;
 
 		this.pickupWeapon(
@@ -96,33 +121,27 @@ export class Player {
 			)
 		);
 
+		this.setArmAngle(this.mPos);
+
 		this.onMouseMove = (e) => {
+			if (this.settings.keyboardMode) return;
 			if (this.pause) return;
 			this.mPos.set(
 				e.screenX - window.innerWidth / 2,
 				e.screenY - window.innerHeight / 2 - 100
 			);
-			if (this.arm.material) this.arm.rotation = -this.mPos.angle;
 
-			if (this.mPos.x > 0) {
-				this.sprite.material = this.rTexture;
-				this.sprite.material.goto(this.lTexture.frames.indexOf(this.lTexture.currentFrame));
-				if (this.arm.material) this.arm.material.goto(1);
-				this.arm.position.x = -2;
-			} else {
-				this.sprite.material = this.lTexture;
-				this.sprite.material.goto(this.rTexture.frames.indexOf(this.rTexture.currentFrame));
-				if (this.arm.material) this.arm.material.goto(0);
-				this.arm.position.x = 2;
-			}
+			this.setArmAngle(this.mPos);
 		};
 
 		this.onMouseDown = (e) => {
+			if (this.settings.keyboardMode) return;
 			if (this.pause) return;
 			if (this.weapon) this.weapon.startFiring(stage, this.position, this.mPos);
 		};
 
 		this.onMouseUp = (e) => {
+			if (this.settings.keyboardMode) return;
 			if (this.pause) return;
 			if (this.weapon)
 				this.pg.forEach((w) => {
@@ -132,25 +151,35 @@ export class Player {
 
 		this.onKeyDown = (e) => {
 			if (this.pause) return;
+
 			switch (e.key) {
 				case 'w':
-				case 'ArrowUp':
 					this.up = true;
 					break;
 
 				case 's':
-				case 'ArrowDown':
 					this.down = true;
 					break;
 
 				case 'a':
-				case 'ArrowLeft':
 					this.left = true;
 					break;
 
 				case 'd':
-				case 'ArrowRight':
 					this.right = true;
+					break;
+
+				case 'ArrowRight':
+					this.arrowRight = true;
+					break;
+				case 'ArrowLeft':
+					this.arrowLeft = true;
+					break;
+				case 'ArrowUp':
+					this.arrowUp = true;
+					break;
+				case 'ArrowDown':
+					this.arrowDown = true;
 					break;
 
 				case '1':
@@ -162,6 +191,12 @@ export class Player {
 				case '3':
 					if (this.pg[2]) this.switchTo(this.pg[2]);
 					break;
+				case ' ':
+					if (this.settings.keyboardMode && this.weapon && !this.shooting) {
+						this.weapon.startFiring(stage, this.position, this.kPos);
+						this.shooting = true;
+					}
+					break;
 			}
 		};
 
@@ -169,23 +204,40 @@ export class Player {
 			if (this.pause) return;
 			switch (e.key) {
 				case 'w':
-				case 'ArrowUp':
 					this.up = false;
+					break;
+				case 'ArrowUp':
+					this.arrowUp = false;
 					break;
 
 				case 's':
-				case 'ArrowDown':
 					this.down = false;
+					break;
+				case 'ArrowDown':
+					this.arrowDown = false;
 					break;
 
 				case 'a':
-				case 'ArrowLeft':
 					this.left = false;
+					break;
+				case 'ArrowLeft':
+					this.arrowLeft = false;
 					break;
 
 				case 'd':
-				case 'ArrowRight':
 					this.right = false;
+					break;
+				case 'ArrowRight':
+					this.arrowRight = false;
+					break;
+
+				case ' ':
+					if (this.settings.keyboardMode) {
+						this.pg.forEach((w) => {
+							if (w) w.stopFiring();
+						});
+						this.shooting = false;
+					}
 					break;
 			}
 		};
@@ -199,21 +251,28 @@ export class Player {
 
 	pickupWeapon(weapon: Pistol | SMG | Sniper | Breadcrumb) {
 		if (weapon.name === 'Pistol') {
+			this.currentWeapon.set('Pistol');
 			this.gear.update((g) => {
 				g[1] = weapon;
 				return g;
 			});
 		} else if (weapon.name === 'SMG') {
+			this.currentWeapon.set('SMG');
+
 			this.gear.update((g) => {
 				g[2] = weapon;
 				return g;
 			});
 		} else if (weapon.name === 'Sniper') {
+			this.currentWeapon.set('Sniper');
+
 			this.gear.update((g) => {
 				g[3] = weapon;
 				return g;
 			});
 		} else if (weapon.name === 'Breadcrumb') {
+			this.currentWeapon.set('Breadcrumb');
+
 			this.gear.update((g) => {
 				g[0] = weapon;
 				return g;
@@ -221,8 +280,12 @@ export class Player {
 		}
 
 		this.weapon = weapon;
+	}
 
-		if (this.mPos.x > 0) {
+	setArmAngle(pos: Vec2) {
+		if (this.arm.material) this.arm.rotation = -pos.angle;
+
+		if (pos.x > 0) {
 			this.sprite.material = this.rTexture;
 			this.sprite.material.goto(this.lTexture.frames.indexOf(this.lTexture.currentFrame));
 			if (this.arm.material) this.arm.material.goto(1);
@@ -237,23 +300,39 @@ export class Player {
 
 	switchTo(weapon: Pistol | SMG | Sniper | Breadcrumb) {
 		this.weapon = weapon;
-
 		this.arm.material = this.weapon.texture;
 
-		if (this.mPos.x > 0) {
-			this.sprite.material = this.rTexture;
-			this.sprite.material.goto(this.lTexture.frames.indexOf(this.lTexture.currentFrame));
-			if (this.arm.material) this.arm.material.goto(1);
-			this.arm.position.x = -2;
-		} else {
-			this.sprite.material = this.lTexture;
-			this.sprite.material.goto(this.rTexture.frames.indexOf(this.rTexture.currentFrame));
-			if (this.arm.material) this.arm.material.goto(0);
-			this.arm.position.x = 2;
-		}
+		this.currentWeapon.set(this.weapon.name);
+
+		if (this.settings.keyboardMode) this.setArmAngle(this.kPos);
+		else this.setArmAngle(this.mPos);
 	}
 
 	update() {
+		if (this.settings.keyboardMode) {
+			if (this.arrowRight) {
+				this.kPos.x = 50;
+				this.kPos.y = 0;
+			}
+
+			if (this.arrowLeft) {
+				this.kPos.x = -50;
+				this.kPos.y = 0;
+			}
+
+			if (this.arrowUp) {
+				this.kPos.y = -50;
+				this.kPos.x = 0;
+			}
+
+			if (this.arrowDown) {
+				this.kPos.y = 50;
+				this.kPos.x = 0;
+			}
+
+			this.setArmAngle(this.kPos);
+		}
+
 		const delta = new Vec2(0, 0);
 
 		if (this.left) delta.x -= (3 * this.speed) / 4;
@@ -265,7 +344,13 @@ export class Player {
 
 		this.velocity.multiply(0.6);
 
-		if (this.pause) this.velocity.set(0);
+		if (this.pause) {
+			this.velocity.set(0);
+			this.right = false;
+			this.left = false;
+			this.up = false;
+			this.down = false;
+		}
 
 		if (this.velocity.magnitude > this.speed) {
 			this.velocity.normalize().multiply(this.speed);
@@ -280,8 +365,10 @@ export class Player {
 			clearInterval(this.stepInterval);
 			this.step.audio.pause();
 		} else {
-			this.sprite.material.start(100);
 			if (!this.walking) {
+				this.rTexture.start(100);
+				this.lTexture.start(100);
+
 				this.stepInterval = setInterval(() => {
 					this.step.audio.restart();
 				}, 200);
@@ -302,6 +389,11 @@ export class Player {
 		window.removeEventListener('mouseup', this.onMouseUp);
 		window.removeEventListener('keydown', this.onKeyDown);
 		window.removeEventListener('keyup', this.onKeyUp);
+
+		clearInterval(this.stepInterval);
+
+		this.step.audio.pause();
+		this.weapon.stopFiring();
 	}
 
 	get position(): Vec2 {

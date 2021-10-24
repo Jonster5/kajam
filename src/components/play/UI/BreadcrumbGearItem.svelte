@@ -1,17 +1,26 @@
 <script lang="ts">
 	import type { Breadcrumb, Pistol, SMG, Sniper } from '@classes/weapons';
 	import imgSRC from '@assets/breadcrum_silhouette.png';
+	import type { Player } from '@classes/player';
+	import type { Writable } from 'svelte/store';
 
 	export let crumb: Breadcrumb;
+	export let cWeapon: string;
+
+	let bg = 'background: #9988;';
+
+	$: if (cWeapon === 'Breadcrumb') {
+		bg = 'background: #ddd8';
+	} else bg = 'background: #9988;';
 </script>
 
 {#if crumb}
-	<article>
+	<article style={bg}>
 		<img src={imgSRC} alt="Breadcrumb Bag" />
 		<div class="num">1</div>
 	</article>
 {:else}
-	<article />
+	<article style={bg} />
 {/if}
 
 <style lang="scss">
