@@ -800,8 +800,8 @@ export class GameMap implements GameMapObject {
 	}
 
 	getSpawnCoords(): Block {
-		return this.checkpoints[this.checkpoints.length - 1];
-		// return this.checkpoints[0];
+		// return this.checkpoints[this.checkpoints.length - 1];
+		return this.checkpoints[0];
 	}
 
 	private rand(min: number, max: number): number {
